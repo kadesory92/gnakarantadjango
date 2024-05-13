@@ -1,0 +1,11 @@
+<!-- Dans votre fichier service_employees.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+  <h1>{{ service.name }} Employees</h1>
+  <ul>
+    {% for employee in employees %}
+      <li>{{ employee.firstname }} {{ employee.lastname }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
