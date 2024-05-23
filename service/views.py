@@ -8,13 +8,17 @@ from django.contrib import messages
 from .models import Service, Employee
 
 
+def manage_service(request):
+    return render(request, '')
+
+
 def create_service(request):
     if request.method == 'POST':
         service_form = ServiceForm(request.POST)
         if service_form.is_valid():
             service_form.save()
             messages.success(request, 'Service created successfully!')
-            return redirect('dashboard')  # Rediriger vers la page de tableau de bord après la création du service
+            return redirect('dashboard')  # Redirect to the dashboard page after creating the service
     else:
         service_form = ServiceForm()
     return render(request, 'registration/register_service.html', {'service_form': service_form})
@@ -23,21 +27,21 @@ def create_service(request):
 def service_list(request):
     services = Service.objects.all()
 
-    # Filtrage
+    # Filtering
     query = request.GET.get('q')
     if query:
         services = services.filter(name__icontains=query)
 
     # Pagination
-    paginator = Paginator(services, 10)  # Afficher 10 services par page
+    paginator = Paginator(services, 10)  # Show 10 services per page
     page = request.GET.get('page')
     try:
         services = paginator.page(page)
     except PageNotAnInteger:
-        # Si la page n'est pas un entier, affichez la première page
+        # If the page is not an integer, display the first page
         services = paginator.page(1)
     except EmptyPage:
-        # Si la page est hors limites (par exemple, 9999), affichez la dernière page de résultats
+        # If the page is out of bounds (for example, 9999), display the last results page
         services = paginator.page(paginator.num_pages)
 
     return render(request, 'service/service_list.html', {'services': services, 'query': query})
@@ -71,7 +75,7 @@ def delete_service(request, service_id):
     return render(request, 'service/delete_service_confirm.html', {'service': service})
 
 
-# Dans votre fichier views.py
+# In your file views.py
 
 def service_employees(request, service_id):
     service = get_object_or_404(Service, pk=service_id)
@@ -79,10 +83,14 @@ def service_employees(request, service_id):
     return render(request, 'service/service_employees.html', {'service': service, 'employees': employees})
 
 
+def manage_employee(request):
+    return render(request, '')
+
+
 def employee_list(request):
     employees = Employee.objects.all()
 
-    # Filtrage
+    # Filtering
     query = request.GET.get('q')
     if query:
         employees = employees.filter(firstname__icontains=query) | \
@@ -90,15 +98,15 @@ def employee_list(request):
                     employees.filter(position__icontains=query)
 
     # Pagination
-    paginator = Paginator(employees, 10)  # Afficher 10 employés par page
+    paginator = Paginator(employees, 10)  # Show 10 employees per page
     page = request.GET.get('page')
     try:
         employees = paginator.page(page)
     except PageNotAnInteger:
-        # Si la page n'est pas un entier, affichez la première page
+        # If the page is not an integer, display the first page
         employees = paginator.page(1)
     except EmptyPage:
-        # Si la page est hors limites (par exemple, 9999), affichez la dernière page de résultats
+        # If the page is out of bounds (for example, 9999), display the last results page
         employees = paginator.page(paginator.num_pages)
 
     return render(request, 'employee/employee_list.html', {'employees': employees, 'query': query})

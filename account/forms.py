@@ -5,19 +5,30 @@ from .models import User
 from school.models import Founder
 
 
-class UserRegistrationForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'password', 'role']
+        fields = ['username', 'email', 'password']
         widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
             # 'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'role': forms.Select(attrs={'class': 'form-control'}),
+            # 'role': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
-class FounderRegistrationForm(forms.ModelForm):
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'password': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+
+class FounderForm(forms.ModelForm):
     class Meta:
         model = Founder
         exclude = ['user']

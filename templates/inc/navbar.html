@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">GN-KARANTA</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'home' %}">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Établissements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Entités</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white btn-sm gap-2" href="{% url 'login' %}">Sing-In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary text-white btn-sm" href="{% url 'register' %}">Sing-Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
