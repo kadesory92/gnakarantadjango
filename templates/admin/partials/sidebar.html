@@ -1,78 +1,57 @@
-<div class="sidebar">
-    <h3 class="sidebar-heading"><a class="nav-link" href="{% url 'admin_dashboard' %}">Menu</a></h3>
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-user"></i>
-          Users
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="#">Add Users</a></li>
-          <li><a class="dropdown-item" href="#">Manage Users</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-graduation-cap"></i>
-          Students
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <!--<li><a class="dropdown-item" href="{% url 'create_student' %}">Add Student</a></li>-->
-          <li><a class="dropdown-item" href="#">Manage students</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-chalkboard-teacher"></i>
-          Teachers
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="{% url 'create_teacher' %}">Add Teacher</a></li>
-          <li><a class="dropdown-item" href="{% url 'manage_teachers' %}">Manage Teachers</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-user-friends"></i>
-          Parents
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="{% url 'create_parent' %}">Add Parent</a></li>
-          <li><a class="dropdown-item" href="{% url 'manage_parents' %}">Manage Parents</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-school"></i>
-          Classes
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="{% url 'create_study_class' %}">Add Class</a></li>
-          <li><a class="dropdown-item" href="{% url 'manage_classes' %}">Manage Classes</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-book"></i>
-          Subjects
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="{% url 'create_subject' %}">Add Subject</a></li>
-          <li><a class="dropdown-item" href="{% url 'manage_subjects' %}">Manage Subjects</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-           aria-expanded="false"><i class="fas fa-book-open"></i>
-          Courses
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="{% url 'create_course' %}">Add Course</a></li>
-          <li><a class="dropdown-item" href="{% url 'manage_courses' %}">Manage Courses</a></li>
-        </ul>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fas fa-clipboard-check"></i> Attendances</a>
-      </li>
-    </ul>
+<div class="bg-light border-right" id="sidebar-wrapper">
+  <div class="sidebar-heading">Guinean Education</div>
+  <div class="list-group list-group-flush">
+    <a href="{% url 'admin-dashboard' %}" class="list-group-item list-group-item-action bg-light">Dashboard</a>
+
+    <a href="#directionsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Directions and Services</a>
+    <div class="collapse list-group-submenu" id="directionsSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Add Service</a>
+      <a href="{% url 'admin.manage_service' %}" class="list-group-item list-group-item-action bg-light pl-4">Manager Service</a>
+      <!--<hr>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Direction 1</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Direction 2</a>-->
+    </div>
+
+    <a href="#staffSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Service Employees</a>
+    <div class="collapse list-group-submenu" id="staffSubmenu">
+      <a href="{% url 'register_employee' %}" class="list-group-item list-group-item-action bg-light pl-4">Add Employee</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager Employees</a>
+    </div>
+
+    <a href="#schoolsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Schools</a>
+    <div class="collapse list-group-submenu" id="schoolsSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Add School</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager School</a>
+    </div>
+
+    <a href="#teachersSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Teachers</a>
+    <div class="collapse list-group-submenu" id="teachersSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Add Teacher</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager Teacher</a>
+    </div>
+
+    <a href="#studentsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Students</a>
+    <div class="collapse list-group-submenu" id="studentsSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manage Student</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Student</a>
+    </div>
+
+    <a href="#programSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">National Program</a>
+    <div class="collapse list-group-submenu" id="programSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Program</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manage Program</a>
+    </div>
+
+    <a href="#rapportsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Rapports</a>
+    <div class="collapse list-group-submenu" id="rapportsSubmenu">
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Daily report</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Weekly report</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Monthly report</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Quarterly report</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Semi-annual report</a>
+      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Annual report</a>
+    </div>
+  </div>
 </div>
+
+

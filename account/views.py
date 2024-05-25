@@ -10,6 +10,10 @@ def login(request):
     return render(request, 'auth/login.html')
 
 
+def admin_dashboard(request):
+    return render(request, 'admin/admin_dashboard.html')
+
+
 def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
@@ -47,21 +51,24 @@ def register_founder(request):
 
 
 def register_employee(request):
-    global user
     if request.method == 'POST':
+        user_form = UserForm(request.POST)
         employee_form = EmployeeForm(request.POST, request.FILES)
-        if employee_form.is_valid():
-            # Create a user associated with the employee
-            user_form = UserForm(request.POST)
-            if user_form.is_valid():
-                user = user_form.save(commit=False)
-                user.set_password(user_form.cleaned_data['password'])
-                user.save()
+        if user_form.is_valid() and employee_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+
             employee = employee_form.save(commit=False)
-            employee.user = user  # Associate the created user with the employee
+            employee.user = user
             employee.save()
-            messages.success(request, 'Employee account created successfully!')
-            return redirect('dashboard')  # Redirect to the dashboard page after the creation of the employee
+
+            return redirect('admin-dashboard')
     else:
+        user_form = UserForm()
         employee_form = EmployeeForm()
-    return render(request, 'registration/register_employee.html', {'employee_form': employee_form})
+
+    return render(request, 'auth/register_employee.html', {
+        'user_form': user_form,
+        'employee_form': employee_form
+    })

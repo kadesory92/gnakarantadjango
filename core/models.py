@@ -62,7 +62,16 @@ class Teaching(models.Model):
 
 
 class StudyClass(models.Model):
+    OPTION = [
+        ('general', 'Enseignement général'),
+        ('math_sciences', 'Sciences Mathématiques'),
+        ('experimental_sciences', 'Sciences Expérimentales'),
+        ('social_science', 'Science Sociale')
+    ]
+
+    name = models.CharField(max_length=200)
     designation = models.CharField(max_length=200)
+    option = models.CharField(max_length=200, choices=OPTION)
 
     def __str__(self):
         return self.designation

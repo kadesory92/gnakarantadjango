@@ -1,0 +1,16 @@
+{% extends 'admin/master_admin.html' %}
+
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-header">Service Information</div>
+    <div class="card-body">
+        <p class="card-text"><strong>Name</strong> : {{ service.name }}</p>
+        <p class="card-text"><strong>Type service</strong> : {{ service.type_service }}</p>
+        <p class="card-text"><strong>Region</strong> : {{ service.region }}</p>
+        <p class="card-text"><strong>Commune</strong> : {{ service.commune }}</p>
+        <p class="card-text"><strong>Prefecture</strong> : {{ service.prefecture }}</p>
+    </div>
+</div>
+
+{% endblock %}

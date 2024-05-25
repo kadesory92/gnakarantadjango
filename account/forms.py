@@ -8,13 +8,13 @@ from school.models import Founder
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'role']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
             # 'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
-            # 'role': forms.Select(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -57,9 +57,9 @@ class EmployeeForm(forms.ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'position': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.TextInput(attrs={'class': 'form-control'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
             'formation': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control custom-textarea', 'row': '3'}),
             'photo': forms.FileInput(attrs={'class': 'form-control'}),
             'certificate': forms.FileInput(attrs={'class': 'form-control'}),
             'service': forms.Select(attrs={'class': 'form-control'}),

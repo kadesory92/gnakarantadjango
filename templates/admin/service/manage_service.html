@@ -2,7 +2,84 @@
 
 {% block content %}
 
+<div class="card mb-4">
 
+    <div class="d-flex justify-content-between card-header">
+        <div class="title h5" style="margin-top: 10px;">Manage Services</div>
 
+        <div class="search">
+            <form class="form-inline float-right" method="get">
+                <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Region</th>
+                        <th>Commune</th>
+                        <th>Prefecture</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ service.name }}</td>
+                            <td>{{ service.type_service }}</td>
+                            <td>{{ service.region }}</td>
+                            <td>{{ service.commune }}</td>
+                            <td>{{ service.prefecture }}</td>
+                            <td>
+                                <a href="{% url 'delete_service' service.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{% url 'edit_service' service.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'detail_service' service.id %}" class="btn btn-info btn-sm">Show</a>
+                                <a href="{% url 'service_detail' service.id %}" class="btn btn-info btn-sm">Service</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+
+        <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if services.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ services.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% for num in services.paginator.page_range %}
+                <li class="page-item {% if services.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if services.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ services.next_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    </div>
+
+</div>
 
 {% endblock %}

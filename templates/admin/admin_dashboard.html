@@ -2,7 +2,80 @@
 
 {% block content %}
 
+<h1 class="mt-4">Dashboard</h1>
+<p>Bienvenue sur le tableau de bord administrateur.</p>
 
+<!-- Statistiques -->
+<div class="row">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card bg-primary text-white shadow">
+            <div class="card-body">
+                Établissements
+                <div class="text-white-50 small">Total: 150</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card bg-success text-white shadow">
+            <div class="card-body">
+                Étudiants
+                <div class="text-white-50 small">Total: 10,000</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card bg-info text-white shadow">
+            <div class="card-body">
+                Enseignants
+                <div class="text-white-50 small">Total: 800</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card bg-warning text-white shadow">
+            <div class="card-body">
+                Cours
+                <div class="text-white-50 small">Total: 1,200</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card mb-4">
+    <div class="card-header">Liste des Établissements</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Localisation</th>
+                        <th>Nombre d'Étudiants</th>
+                        <th>Nombre d'Enseignants</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>École Primaire Alpha</td>
+                        <td>Conakry</td>
+                        <td>500</td>
+                        <td>30</td>
+                        <td>
+                            <a href="#" class="btn btn-info btn-sm">Voir</a>
+                            <a href="#" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

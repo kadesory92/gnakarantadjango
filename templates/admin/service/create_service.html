@@ -1,0 +1,32 @@
+{% extends 'admin/master_admin.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center ">
+    <div class="col">
+
+        <div class="card mb-4">
+            <div class="card-header">Create Service</div>
+
+            <div class="card-body">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ service_form.as_p }}
+                    <button type="submit">Create Service</button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

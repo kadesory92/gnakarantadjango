@@ -9,7 +9,26 @@ from .models import Service, Employee
 
 
 def manage_service(request):
-    return render(request, '')
+    services = Service.objects.all()
+
+    # Filtering
+    query = request.GET.get('q')
+    if query:
+        services = services.filter(name__icontains=query)
+
+    # Pagination
+    paginator = Paginator(services, 10)  # Show 10 services per page
+    page = request.GET.get('page')
+    try:
+        services = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page is not an integer, display the first page
+        services = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of bounds (for example, 9999), display the last results page
+        services = paginator.page(paginator.num_pages)
+
+    return render(request, 'admin/service/manage_service.html', {'services': services, 'query': query})
 
 
 def create_service(request):
@@ -18,10 +37,10 @@ def create_service(request):
         if service_form.is_valid():
             service_form.save()
             messages.success(request, 'Service created successfully!')
-            return redirect('dashboard')  # Redirect to the dashboard page after creating the service
+            return redirect('admin-dashboard')
     else:
         service_form = ServiceForm()
-    return render(request, 'registration/register_service.html', {'service_form': service_form})
+    return render(request, 'admin/service/create_service.html', {'service_form': service_form})
 
 
 def service_list(request):
@@ -47,23 +66,31 @@ def service_list(request):
     return render(request, 'service/service_list.html', {'services': services, 'query': query})
 
 
-def service_detail(request, service_id):
-    service = get_object_or_404(Service, pk=service_id)
+def service_detail(request, id):
+    service = get_object_or_404(Service, pk=id)
     employees = Employee.objects.filter(service=service)
-    return render(request, 'service/service_detail.html', {'service': service, 'employees': employees})
+    return render(request, 'admin/service/service_detail.html', {'service': service, 'employees': employees})
 
 
-def update_service(request, service_id):
-    service = get_object_or_404(Service, pk=service_id)
+def detail_service(request, id):
+    service = get_object_or_404(Service, pk=id)
+    return render(request, 'admin/service/detail_service.html', {'service': service})
+
+
+def edit_service(request, id):
+    service = get_object_or_404(Service, pk=id)
+
     if request.method == 'POST':
         service_form = ServiceForm(request.POST, instance=service)
         if service_form.is_valid():
             service_form.save()
             messages.success(request, 'Service updated successfully!')
-            return redirect('service_list')
+            return redirect('admin.manage_service')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         service_form = ServiceForm(instance=service)
-    return render(request, 'service/update_service.html', {'service_form': service_form})
+    return render(request, 'admin/service/edit_service.html', {'service_form': service_form})
 
 
 def delete_service(request, service_id):
@@ -84,7 +111,28 @@ def service_employees(request, service_id):
 
 
 def manage_employee(request):
-    return render(request, '')
+    employees = Employee.objects.all()
+
+    # Filtering
+    query = request.GET.get('q')
+    if query:
+        employees = employees.filter(lastname__icontains=query) | \
+                    employees.filter(firstname__icontains=query) | \
+                    employees.filter(phone__icontains=query) | \
+                    employees.filter(position__icontains=query)
+
+    # Pagination
+    paginator = Paginator(employees, 10)  # Show 10 services per page
+    page = request.GET.get('page')
+    try:
+        services = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page is not an integer, display the first page
+        employees = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of bounds (for example, 9999), display the last results page
+        employees = paginator.page(paginator.num_pages)
+    return render(request, 'admin/employee/manage_employee.html', {'employees': employees, 'query': query})
 
 
 def employee_list(request):

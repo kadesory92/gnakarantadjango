@@ -1,0 +1,56 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+#wrapper {
+    display: flex;
+    width: 100%;
+    height: 900px;
+    overflow: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100%;
+    margin-left: -15rem;
+    -webkit-transition: margin 0.25s ease-out;
+    -moz-transition: margin 0.25s ease-out;
+    -o-transition: margin 0.25s ease-out;
+    transition: margin 0.25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+form .form-group {
+    margin-bottom: 1rem;
+}
+
+/*.custom-textarea {
+    height: 150px; *//* Ajustez la hauteur selon vos besoins *//*
+    resize: none;  *//* Désactiver la redimensionnement si nécessaire *//*
+}*/
+

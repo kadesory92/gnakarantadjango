@@ -2,11 +2,13 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('manage_service', views.manage_service, name='manage_service'),
-    path('create_service/', views.create_service, name='create_service'),
+
+    path('admin/manage_service', views.manage_service, name='admin.manage_service'),
+    path('admin/create_service/', views.create_service, name='create_service'),
     path('service_list/', views.service_list, name='service_list'),
-    path('service_detail/<int:service_id>/', views.service_detail, name='service_detail'),
-    path('update_service/<int:service_id>/', views.update_service, name='update_service'),
+    path('detail_service/<int:id>/', views.detail_service, name='detail_service'),
+    path('service_detail/<int:id>/', views.service_detail, name='service_detail'),
+    path('edit_service/<int:id>/', views.edit_service, name='edit_service'),
     path('delete_service/<int:service_id>/', views.delete_service, name='delete_service'),
 
     path('manage_employee', views.manage_employee, name='manage_employee'),
