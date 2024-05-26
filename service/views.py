@@ -160,13 +160,13 @@ def employee_list(request):
     return render(request, 'employee/employee_list.html', {'employees': employees, 'query': query})
 
 
-def employee_detail(request, employee_id):
-    employee = get_object_or_404(Employee, pk=employee_id)
-    return render(request, 'employee/employee_detail.html', {'employee': employee})
+def employee_detail(request, id):
+    employee = get_object_or_404(Employee, pk=id)
+    return render(request, 'admin/employee/employee_detail.html', {'employee': employee})
 
 
-def update_employee(request, employee_id):
-    employee = get_object_or_404(Employee, pk=employee_id)
+def edit_employee(request, id):
+    employee = get_object_or_404(Employee, pk=id)
     if request.method == 'POST':
         employee_form = EmployeeForm(request.POST, request.FILES, instance=employee)
         if employee_form.is_valid():
@@ -175,7 +175,7 @@ def update_employee(request, employee_id):
             return redirect('service_detail', service_id=employee.service.id)
     else:
         employee_form = EmployeeForm(instance=employee)
-    return render(request, 'service/update_employee.html', {'employee_form': employee_form, 'employee': employee})
+    return render(request, 'admin/employee/edit_employee.html', {'employee_form': employee_form, 'employee': employee})
 
 
 def delete_employee(request, employee_id):
@@ -185,7 +185,7 @@ def delete_employee(request, employee_id):
         employee.delete()
         messages.success(request, 'Employee deleted successfully!')
         return redirect('service_detail', service_id=service_id)
-    return render(request, 'service/delete_employee_confirm.html', {'employee': employee})
+    return render(request, 'admin/service/delete_employee_confirm.html', {'employee': employee})
 
 
 def employee_service(request, employee_id):

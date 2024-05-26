@@ -15,7 +15,7 @@
     <a href="#staffSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Service Employees</a>
     <div class="collapse list-group-submenu" id="staffSubmenu">
       <a href="{% url 'register_employee' %}" class="list-group-item list-group-item-action bg-light pl-4">Add Employee</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager Employees</a>
+      <a href="{% url 'admin.manage_employee' %}" class="list-group-item list-group-item-action bg-light pl-4">Manager Employees</a>
     </div>
 
     <a href="#schoolsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Schools</a>

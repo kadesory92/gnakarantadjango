@@ -3,7 +3,47 @@
 {% block content %}
 
 
-
+<div class="card mb-4">
+    <div class="card-header">Liste des employés de service</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Lastname</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td>
+                            {% if employee.photo %}
+                                <img src="{{ employee.photo.url }}" alt="{{ employee.user.username }}" style="height: 50px; width: 100px">
+                            {% else %}
+                                No Photo
+                            {% endif %}
+                        </td>
+                        <td>{{employee.lastname}}</td>
+                        <td>{{employee.position}}</td>
+                        <td>{{employee.user.email}}</td>
+                        <td>{{employee.phone}}</td>
+                        <td>
+                            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-info btn-sm">Show</a>
+                            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
