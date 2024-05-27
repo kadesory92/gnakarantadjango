@@ -1,4 +1,8 @@
+import os
+
+from django.conf import settings
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.forms import EmployeeForm
@@ -157,12 +161,21 @@ def employee_list(request):
         # If the page is out of bounds (for example, 9999), display the last results page
         employees = paginator.page(paginator.num_pages)
 
-    return render(request, 'employee/employee_list.html', {'employees': employees, 'query': query})
+    return render(request, 'admin/employee/employee_list.html', {'employees': employees, 'query': query})
+
+
+# def employee_detail(request, id):
+#     employee = get_object_or_404(Employee, pk=id)
+#     return render(request, 'admin/employee/employee_detail.html', {'employee': employee})
 
 
 def employee_detail(request, id):
-    employee = get_object_or_404(Employee, pk=id)
-    return render(request, 'admin/employee/employee_detail.html', {'employee': employee})
+    try:
+        employee = get_object_or_404(Employee, pk=id)
+        return render(request, 'admin/employee/employee_detail.html', {'employee': employee})
+    except Http404:
+        messages.error(request, 'Employee not found.')
+        return redirect('admin.manage_employee')
 
 
 def edit_employee(request, id):
@@ -172,20 +185,41 @@ def edit_employee(request, id):
         if employee_form.is_valid():
             employee_form.save()
             messages.success(request, 'Employee updated successfully!')
-            return redirect('service_detail', service_id=employee.service.id)
+            return redirect('admin.manage_employee')
+        else:
+            messages.error(request, 'There was an error in the form. Please correct the errors below.')
     else:
         employee_form = EmployeeForm(instance=employee)
-    return render(request, 'admin/employee/edit_employee.html', {'employee_form': employee_form, 'employee': employee})
+    return render(request, 'admin/employee/edit_employee.html', {'employee_form': employee_form})
 
 
-def delete_employee(request, employee_id):
-    employee = get_object_or_404(Employee, pk=employee_id)
+# def delete_employee(request, id):
+#     employee = get_object_or_404(Employee, pk=id)
+#     if request.method == 'POST':
+#         service_id = employee.service.id
+#         employee.delete()
+#         messages.success(request, 'Employee deleted successfully!')
+#         return redirect('admin.manage_employee')
+#         # , service_id=service_id
+#     return render(request, 'admin/employee/delete_employee_confirm.html', {'employee': employee})
+
+
+def delete_employee(request, id):
+    employee = get_object_or_404(Employee, pk=id)
     if request.method == 'POST':
-        service_id = employee.service.id
+        # service_id = employee.service.id
+
+        # Delete the photo from the storage
+        if employee.photo.url:
+            photo_path = os.path.join(settings.MEDIA_ROOT, employee.photo.url)
+            if os.path.isfile(photo_path):
+                os.remove(photo_path)
+
         employee.delete()
         messages.success(request, 'Employee deleted successfully!')
-        return redirect('service_detail', service_id=service_id)
-    return render(request, 'admin/service/delete_employee_confirm.html', {'employee': employee})
+        return redirect('admin.manage_employee')  # , service_id=service_id
+
+    return render(request, 'admin/employee/delete_employee_confirm.html', {'employee': employee})
 
 
 def employee_service(request, employee_id):
@@ -207,3 +241,12 @@ def assign_employee_to_service(request, employee_id):
         form = EmployeeAssignmentForm(instance=employee)
 
     return render(request, 'employee/assign_to_service.html', {'form': form, 'employee': employee})
+
+# def employee_pdf(request, id):
+#     employee = get_object_or_404(Employee, pk=id)
+#     html_string = render_to_string('admin/employee/employee_pdf.html', {'employee': employee})
+#     html = HTML(string=html_string)
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = f'attachment; filename=employee_{employee.id}.pdf'
+#     html.write_pdf(response)
+#     return response

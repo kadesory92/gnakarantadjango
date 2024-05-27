@@ -5,7 +5,7 @@
 
     <a href="#directionsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Directions and Services</a>
     <div class="collapse list-group-submenu" id="directionsSubmenu">
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Add Service</a>
+      <a href="{% url 'create_service' %}" class="list-group-item list-group-item-action bg-light pl-4">Add Service</a>
       <a href="{% url 'admin.manage_service' %}" class="list-group-item list-group-item-action bg-light pl-4">Manager Service</a>
       <!--<hr>
       <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Direction 1</a>

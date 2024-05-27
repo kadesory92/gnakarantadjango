@@ -1,7 +1,3 @@
-{% extends 'admin/master_admin.html' %}
-
-{% block content %}
-
 
 <div class="card mb-4">
     <div class="card-header">Liste des employés de service</div>
@@ -34,7 +30,7 @@
                         <td>{{employee.phone}}</td>
                         <td>
                             <a href="{% url 'employee_detail' employee.id %}" class="btn btn-info btn-sm">Show</a>
-                            <a href="{% url 'edit_employee' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'employee_detail' employee.id %}" class="btn btn-warning btn-sm">Edit</a>
                             <a href="#" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
@@ -44,6 +40,3 @@
         </div>
     </div>
 </div>
-
-
-{% endblock %}

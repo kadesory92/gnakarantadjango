@@ -6,13 +6,17 @@
 
     <div class="d-flex justify-content-between card-header">
         <div class="title h5" style="margin-top: 10px;">Manage Services</div>
+        <div class="d-flex search_and_add">
+            <div class="search">
+                <form class="form-inline float-right" method="get">
+                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
 
-        <div class="search">
-            <form class="form-inline float-right" method="get">
-                <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <a href="{% url 'create_service' %}" class="btn btn-info btn-sm ml-1">Add New Service</a>
         </div>
+
     </div>
     <div class="card-body">
         <div class="table-responsive">

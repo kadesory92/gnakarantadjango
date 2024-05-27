@@ -1,0 +1,23 @@
+<div class="container">
+        <h1>Employee Detail: {{ employee.firstname }} {{ employee.lastname }}</h1>
+
+        <div class="employee-photo">
+            {% if employee.photo %}
+                <img src="{{ employee.photo.url }}" alt="{{ employee.firstname }} {{ employee.lastname }}">
+            {% else %}
+                <p>No photo available</p>
+            {% endif %}
+        </div>
+
+        <div class="employee-details">
+            <p><strong>Full Name:</strong> {{ employee.firstname }} {{ employee.lastname }}</p>
+            <p><strong>Date of Birth:</strong> {{ employee.date_of_birth }}</p>
+            <p><strong>Gender:</strong> {{ employee.get_gender_display }}</p>
+            <p><strong>Phone:</strong> {{ employee.phone }}</p>
+            <p><strong>Position:</strong> {{ employee.position }}</p>
+            <p><strong>Status:</strong> {{ employee.get_status_display }}</p>
+            <p><strong>Formation:</strong> {{ employee.formation }}</p>
+            <p><strong>Address:</strong> {{ employee.address }}</p>
+            <p><strong>Service:</strong> {{ employee.service }}</p>
+        </div>
+</div>

@@ -2,11 +2,17 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row" style="margin-top:80px; margin-bottom:0px;">
     <div class="col-3">
         <div class="card mb-4 justify-content-center">
-            <div class="card-header">User Profile</div>
-            <img class="card-img-top" src="{{employee.photo.url}}" alt="Card image" style="width:30%; margin-left:90px; margin-bottom:-10px; margin-top:20px;">
+            <div class="card-header text-center">User Profile</div>
+
+            {% if employee.photo %}
+                <img class="card-img-top" src="{{employee.photo.url}}" alt="Card image" style="width:30%; margin-left:90px; margin-bottom:-10px; margin-top:20px;">
+            {% else %}
+                No Photo
+            {% endif %}
+
             <div class="card-body">
                 <div class="card-title" style="margin-left:60px;">
                     <strong>Username : </strong>{{employee.user.username}}
@@ -18,22 +24,45 @@
 
     <div class="col-9">
         <div class="card mb-4 justify-content-center">
-            <div class="card-header">Personal Information</div>
+            <div class="card-header text-center">Personal Information</div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4 card-title"><strong>Firstname : </strong>{{employee.firstname}}</div>
-                    <div class="col-4 card-title"><strong>Lastname : </strong>{{employee.lastname}}</div>
-                    <div class="col-4 card-title"><strong>Date Of Birthday : </strong>{{employee.date_of_birth}}</div>
-                </div>
-                <div class="row">
-                    <div class="col-4 card-title"><strong>Phone : </strong>{{employee.phone}}</div>
-                    <div class="col-4 card-title"><strong>Position : </strong>{{employee.position}}</div>
-                    <div class="col-4 card-title"><strong>Address : </strong>{{employee.address}}</div>
+                    <div class="col-4">
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Firstname</strong> : {{employee.firstname}}</li>
+                          <li class="list-group-item"><strong>Lastname</strong> : {{employee.lastname}}</li>
+                          <li class="list-group-item"><strong>Date Of Birthday</strong> : {{employee.date_of_birth}}</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-4">
+                        <ul class="list-group">
+                          <li class="list-group-item"><strong>Gender</strong> : {{employee.gender}}</li>
+                          <li class="list-group-item"><strong>Status</strong> : {{employee.status}}</li>
+                          <li class="list-group-item"><strong>Phone</strong> : {{employee.phone}}</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-4">
+                        <ul class="list-group">
+                          <li class="list-group-item"><strong>Service</strong> : {{employee.service.name}}</li>
+                          <li class="list-group-item"><strong>Position</strong> : {{employee.position}}</li>
+                          <li class="list-group-item"><strong>Address</strong> : {{employee.address}}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'admin.manage_employee' %}" class="btn btn-primary mx-1">Go to Employees List</a>
+            <a href="" class="btn btn-warning btn-sm mx-1">Print as PDF</a>
+            <a href="{% url 'admin.delete_employee' employee.id %}" class="btn btn-danger btn-sm mx-1">Delete</a>
         </div>
     </div>
 
 </div>
 
 {% endblock %}
+
+<!--{% url 'employee_pdf' employee.id %}-->

@@ -25,7 +25,10 @@
                                 <label for="password" class="form-label">Password:</label>
                                 <input type="password" id="password" name="password" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary sm mx-1">Login</button>
+                                <a href="{% url 'register' %}" class="btn btn-info sm mx-1">Or register</a>
+                            </div>
                         </form>
                     </div>
                 </div>
