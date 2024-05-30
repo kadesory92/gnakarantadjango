@@ -10,26 +10,23 @@
                         <h4 class="card-title text-center">Login</h4>
                     </div>
                     <div class="card-body">
-                        {% if error %}
-                            <div class="alert alert-danger" role="alert">
-                                {{ error }}
-                            </div>
-                        {% endif %}
+
                         <form method="post">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username:</label>
-                                <input type="text" id="username" name="username" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" id="password" name="password" class="form-control" required>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-primary sm mx-1">Login</button>
-                                <a href="{% url 'register' %}" class="btn btn-info sm mx-1">Or register</a>
-                            </div>
+                          {% csrf_token %}
+                          {{ form.as_p }}
+                          <div class="d-flex justify-content-between">
+                              <button type="submit" class="btn btn-info btn-sm text-white">Login</button>
+                              <a href="{% url 'register' %}" class="btn btn-info btn-sm text-white">Or Register</a>
+                          </div>
                         </form>
+                        {% if messages %}
+                          <ul class="messages">
+                            {% for message in messages %}
+                              <li {% if message.tags %} class="{{ message.tags }}" {% endif %}> {{ message }}</li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

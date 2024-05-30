@@ -19,6 +19,7 @@ class User(AbstractUser):
         ('SCHOOL_ADMIN', 'School Admin'),
         ('SCHOOL_MANAGER', 'School Manager'),
         ('SCHOOL', 'School'),
+        ('SCHOOL_STAFF', 'Personnel d\'école'),
         ('TEACHER', 'Teacher'),
         ('STUDENT', 'Student'),
         ('PARENT', 'Parent'),
@@ -30,3 +31,5 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+

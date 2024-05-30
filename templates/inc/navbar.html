@@ -20,8 +20,12 @@
                 </li>
             </ul>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end ml-4">
-                <a class="btn btn-info btn-sm text-white me-md-2 mr-2 my-0" href="{% url 'login' %}">Sing-In</a>
-                <a class="btn btn-info btn-sm text-white my-0" href="{% url 'register' %}">Sing-Up</a>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-info btn-sm text-white me-md-2 mr-2 my-0" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="btn btn-info btn-sm text-white my-0" href="{% url 'logout' %}">Log-Out</a>
+                {% else %}
+                    <a class="btn btn-info btn-sm text-white me-md-2 mr-2 my-0" href="{% url 'login' %}">Sing-In</a>
+                {% endif %}
             </div>
         </div>
     </div>

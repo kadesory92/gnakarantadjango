@@ -5,6 +5,7 @@ from service.models import Service
 
 
 class Founder(models.Model):
+    objects = None
     GENDER = [
         ('female', 'Féminin'),
         ('male', 'Masculin'),
@@ -26,16 +27,19 @@ class Founder(models.Model):
 
 
 class School(models.Model):
+    objects = None
     TYPE_SCHOOL = [
-        ('preschool', 'Préscolaire'),
-        ('primary', 'Primaire'),
-        ('secondary', 'Secondaire')
+        ('public', 'Ecole Publique'),
+        ('private', 'Ecole Privée')
 
     ]
     LEVEL = [
         ('primary', 'Primaire'),
         ('college_cycle', 'Collège'),
         ('high_school_cycle', 'Lycée'),
+        ('primary_college', 'Ecole Primaire et Collège'),
+        ('college_high_school', 'Collège et lycée'),
+        ('general_level', 'Tous les niveaux')
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     founder = models.ForeignKey(Founder, on_delete=models.SET_NULL, null=True, blank=True)
@@ -53,6 +57,17 @@ class School(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Local(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    designation = models.CharField(max_length=200)
+    type = models.CharField(max_length=200)
+    category = models.CharField(max_length=200)
+    address = models.TextField()
+
+    def __str__(self):
+        return self.designation
 
 
 class Staff(models.Model):
@@ -76,13 +91,3 @@ class Staff(models.Model):
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
 
-
-class Local(models.Model):
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-    designation = models.CharField(max_length=200)
-    type = models.CharField(max_length=200)
-    category = models.CharField(max_length=200)
-    address = models.TextField()
-
-    def __str__(self):
-        return self.designation

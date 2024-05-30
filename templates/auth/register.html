@@ -29,7 +29,10 @@
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ user_form.as_p }}
-            <button type="submit" class="btn btn-primary">Register</button>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-info btn-sm text-white">Register</button>
+                <a href="{% url 'home' %}" class="btn btn-info btn-sm text-white">Cancel</a>
+            </div>
           </form>
         </div>
 

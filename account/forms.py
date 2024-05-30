@@ -18,14 +18,25 @@ class UserForm(forms.ModelForm):
         }
 
 
-class LoginForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'password': forms.TextInput(attrs={'class': 'form-control'})
-        }
+# class LoginForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['username', 'password']
+#         widgets = {
+#             'username': forms.TextInput(attrs={'class': 'form-control'}),
+#             'password': forms.TextInput(attrs={'class': 'form-control'})
+#         }
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=200,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    )
+    password = forms.CharField(
+        max_length=200,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+    )
 
 
 class FounderForm(forms.ModelForm):
@@ -35,12 +46,12 @@ class FounderForm(forms.ModelForm):
         widgets = {
             'lastname': forms.TextInput(attrs={'class': 'form-control'}),
             'firstname': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'date': 'date'}),
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'bio': forms.Textarea(attrs={'class': 'form-control'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'status': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
             'document': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }
@@ -51,16 +62,16 @@ class EmployeeForm(forms.ModelForm):
         model = Employee
         exclude = ['user']
         widgets = {
-            'lastname': forms.TextInput(attrs={'class': 'form-control'}),
-            'firstname': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'gender': forms.Select(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'position': forms.TextInput(attrs={'class': 'form-control'}),
-            'status': forms.Select(attrs={'class': 'form-control'}),
-            'formation': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control custom-textarea', 'row': '3'}),
-            'photo': forms.FileInput(attrs={'class': 'form-control'}),
-            'certificate': forms.FileInput(attrs={'class': 'form-control'}),
-            'service': forms.Select(attrs={'class': 'form-control'}),
+            'lastname': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'firstname': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control mb-2', 'type': 'date'}),
+            'gender': forms.Select(attrs={'class': 'form-control mb-2'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'position': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'status': forms.Select(attrs={'class': 'form-control mb-2'}),
+            'formation': forms.TextInput(attrs={'class': 'form-control mb-2'}),
+            'address': forms.Textarea(attrs={'class': 'form-control custom-textarea mb-2', 'row': 3}),
+            'photo': forms.FileInput(attrs={'class': 'form-control mb-2'}),
+            'certificate': forms.FileInput(attrs={'class': 'form-control mb-2'}),
+            'service': forms.Select(attrs={'class': 'form-control mb-2'}),
         }
