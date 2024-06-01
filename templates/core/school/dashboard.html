@@ -1,0 +1,115 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+
+    <div class="content">
+        <div class="container-fluid">
+          <h4 class="mt-3 mb-5">Admin Dashboard</h4>
+
+          <!-- Statistics -->
+          <div class="row">
+            <!-- Student statistics -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Student Statistics</h5>
+                </div>
+                <div class="card-body">
+                  <p>Total Students : {{ total_students }}</p>
+                  <p>Total girls : </p>
+                  <!-- Add more dynamic student statistics here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Statistics on teachers -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Teacher Statistics</h5>
+                </div>
+                <div class="card-body">
+                  <p>Total Teachers : {{ total_teachers }}</p>
+                  <p>Private teachers : </p>
+                  <!-- Add more dynamic statistics on teachers here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Attendance statistics -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">Attendance Statistics</h5>
+                </div>
+                <div class="card-body">
+                  <p>Percentage of student attendance : {{ percentage_present }} %</p>
+                  <p>Percentage of student absence : {{ percentage_absent }} %</p>
+                  <!-- Add other dynamic attendance statistics here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- List of students -->
+          <div class="row mt-4" id="listStudents">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="card-title">List of Students</h5>
+                </div>
+                <div class="card-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Date Of Birth</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for student in page_obj %}
+                      <tr>
+                          <td>{{ student.user.username }}</td>
+                          <td>{{ student.user.first_name }}</td>
+                          <td>{{ student.user.last_name }}</td>
+                          <td>{{ student.date_of_birth }}</td>
+                          <td>
+                            <a href="{% url 'edit_student' student.user_id %}" class="btn btn-primary btn-sm">Update</a>
+                            <a href="{% url 'delete_student' student.user_id %}" class="btn btn-danger btn-sm">Delete</a>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div>
+                  <div class="pagination justify-content-md-center">
+                    <span class="step-links">
+                      {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                      {% endif %}
+
+                      <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                      </span>
+
+                      {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                      {% endif %}
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -28,6 +28,10 @@ class Founder(models.Model):
 
 class School(models.Model):
     objects = None
+    CATEGORY = [
+        ('primary_education', 'Enseignement primaire'),
+        ('secondary_education', 'Enseignement Seconaire')
+    ]
     TYPE_SCHOOL = [
         ('public', 'Ecole Publique'),
         ('private', 'Ecole Privée')
@@ -48,7 +52,7 @@ class School(models.Model):
                             related_name='inspection_regional')
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=200, choices=TYPE_SCHOOL)
-    category = models.CharField(max_length=200)
+    category = models.CharField(max_length=200, choices=CATEGORY)
     level = models.CharField(max_length=200, choices=LEVEL)
     phone = models.CharField(max_length=200)
     address_email = models.EmailField(max_length=200, blank=True, null=True)
@@ -71,6 +75,7 @@ class Local(models.Model):
 
 
 class Staff(models.Model):
+    objects = None
     GENDER = [
         ('female', 'Féminin'),
         ('male', 'Masculin'),

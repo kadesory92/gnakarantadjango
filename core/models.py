@@ -33,8 +33,6 @@ class Teacher(models.Model):
         return f"{self.firstname} {self.lastname}"
 
 
-#
-
 class SchoolTeacher(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -99,6 +97,7 @@ class Course(models.Model):
 
 
 class Student(models.Model):
+    objects = None
     GENDER = [
         ('female', 'Féminin'),
         ('male', 'Masculin'),
@@ -118,7 +117,6 @@ class Student(models.Model):
 
 
 class Enrollment(models.Model):
-
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     school = models.ForeignKey(School, related_name='current_school', on_delete=models.CASCADE)

@@ -24,4 +24,6 @@ urlpatterns = [
     path('employee_service/<int:employee_id>/', views.employee_service, name='employee_service'),
     path('assign_employee_to_service/<int:employee_id>/', views.assign_employee_to_service,
          name='assign_employee_to_service'),
+
+    path('admin/service/dashboard', views.service_dashboard, name='service_dashboard')
 ]

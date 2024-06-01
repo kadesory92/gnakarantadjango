@@ -1,0 +1,48 @@
+{% extends 'admin/master_admin.html' %}
+
+{% block content %}
+
+    <div class="container mt-1">
+        <h4 class="mb-4 text-center">School Information</h4>
+
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-header text-center">
+                    {{ school.name }}
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-4 info_school">
+                            <h5 class="card-title">Type: {{ school.type }}</h5>
+                            <p class="card-text"><strong>Direction:</strong> {{ school.direction.name }}</p>
+                            <p class="card-text"><strong>IRE:</strong> {{ school.ire.name }}</p>
+                            <p class="card-text"><strong>Category:</strong> {{ school.category }}</p>
+                            <p class="card-text"><strong>Level:</strong> {{ school.level }}</p>
+                            <p class="card-text"><strong>Phone:</strong> {{ school.phone }}</p>
+                            <p class="card-text"><strong>Email:</strong> {{ school.address_email }}</p>
+                            <p class="card-text"><strong>Website:</strong> <a href="{{ school.site_web }}">{{ school.site_web }}</a></p>
+                        </div>
+
+                        <div class="col-8 image_school">
+                            {% if school.image %}
+                                <img src="{{ school.image.url }}" class="img-fluid" alt="School Image">
+                            {% else %}
+                                <img src="/static/images/image_default.jpeg" class="img-fluid" alt="School Image" style="height:300px; width:100%;">
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <a href="{% url 'list_schools' %}" class="btn btn-primary mt-3">Back to List</a>
+        {% endif %}
+    </div>
+
+{% endblock %}

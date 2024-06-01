@@ -193,17 +193,6 @@ def edit_employee(request, id):
     return render(request, 'admin/employee/edit_employee.html', {'employee_form': employee_form})
 
 
-# def delete_employee(request, id):
-#     employee = get_object_or_404(Employee, pk=id)
-#     if request.method == 'POST':
-#         service_id = employee.service.id
-#         employee.delete()
-#         messages.success(request, 'Employee deleted successfully!')
-#         return redirect('admin.manage_employee')
-#         # , service_id=service_id
-#     return render(request, 'admin/employee/delete_employee_confirm.html', {'employee': employee})
-
-
 def delete_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
     if request.method == 'POST':
@@ -242,11 +231,8 @@ def assign_employee_to_service(request, employee_id):
 
     return render(request, 'employee/assign_to_service.html', {'form': form, 'employee': employee})
 
-# def employee_pdf(request, id):
-#     employee = get_object_or_404(Employee, pk=id)
-#     html_string = render_to_string('admin/employee/employee_pdf.html', {'employee': employee})
-#     html = HTML(string=html_string)
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = f'attachment; filename=employee_{employee.id}.pdf'
-#     html.write_pdf(response)
-#     return response
+
+def service_dashboard(request):
+    return render(request, 'service/admin/dashboard.html')
+
+

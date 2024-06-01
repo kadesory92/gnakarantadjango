@@ -53,11 +53,11 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'account', 'templates'),
-            os.path.join(BASE_DIR, 'core', 'templates'),
-            os.path.join(BASE_DIR, 'service', 'templates'),
-            os.path.join(BASE_DIR, 'school', 'templates'),
-            os.path.join(BASE_DIR, 'messaging', 'templates'),
+            # os.path.join(BASE_DIR, 'account', 'templates'),
+            # os.path.join(BASE_DIR, 'core', 'templates'),
+            # os.path.join(BASE_DIR, 'service', 'templates'),
+            # os.path.join(BASE_DIR, 'school', 'templates'),
+            # os.path.join(BASE_DIR, 'messaging', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

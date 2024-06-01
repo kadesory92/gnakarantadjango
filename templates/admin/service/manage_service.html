@@ -4,17 +4,17 @@
 
 <div class="card mb-4">
 
-    <div class="d-flex justify-content-between card-header">
+    <div class="d-flex justify-content-between card-header my-2">
         <div class="title h5" style="margin-top: 10px;">Manage Services</div>
         <div class="d-flex search_and_add">
             <div class="search">
                 <form class="form-inline float-right" method="get">
                     <input class="form-control mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ query }}">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <button class="btn btn-outline-success my-1 my-sm-0" type="submit">Search</button>
                 </form>
             </div>
 
-            <a href="{% url 'create_service' %}" class="btn btn-info btn-sm ml-1">Add New Service</a>
+            <a href="{% url 'create_service' %}" class="btn btn-info btn-sm ml-1 text-center my-1">Add New Service</a>
         </div>
 
     </div>

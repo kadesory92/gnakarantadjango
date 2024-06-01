@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.shortcuts import render, redirect
 
@@ -37,47 +37,43 @@ def logOut(request):
 
 @login_required(login_url='login')
 def admin_dashboard(request):
-    query = request.GET.get('q', '')
-    filter_type = request.GET.get('type', '')
-    filter_level = request.GET.get('level', '')
-    filter_direction = request.GET.get('direction', '')
-    filter_ire = request.GET.get('ire', '')
-
     schools = School.objects.all()
 
+    # Filtering
+    query = request.GET.get('q')
+    direction_query = request.GET.get('direction')
+    ire_query = request.GET.get('ire')
+    type_query = request.GET.get('type')
+
     if query:
-        schools = schools.filter(
-            Q(name__icontains=query) | Q(category__icontains=query)
-        )
+        schools = schools.filter(name__icontains=query)
+    if direction_query:
+        schools = schools.filter(direction__name__icontains=direction_query)
+    if ire_query:
+        schools = schools.filter(ire__name__icontains=ire_query)
+    if type_query:
+        schools = schools.filter(type__icontains=type_query)
 
-    if filter_type:
-        schools = schools.filter(type=filter_type)
+    # Pagination
+    paginator = Paginator(schools, 10)  # Show 10 services per page
+    page = request.GET.get('page')
+    try:
+        schools = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page is not an integer, display the first page
+        schools = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of bounds (for example, 9999), display the last results page
+        schools = paginator.page(paginator.num_pages)
 
-    if filter_level:
-        schools = schools.filter(level=filter_level)
-
-    if filter_direction:
-        schools = schools.filter(direction__id=filter_direction)
-
-    if filter_ire:
-        schools = schools.filter(ire__id=filter_ire)
-
-    paginator = Paginator(schools, 10)  # Show 10 schools per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    directions = Service.objects.all()  # Assuming Service model represents directions
-    ires = Service.objects.all()  # Assuming Service model represents IREs
-    return render(request, 'admin/admin_dashboard.html', {
-        'page_obj': page_obj,
+    context = {
+        'schools': schools,
         'query': query,
-        'filter_type': filter_type,
-        'filter_level': filter_level,
-        'filter_direction': filter_direction,
-        'filter_ire': filter_ire,
-        'directions': directions,
-        'ires': ires,
-    })
+        'direction_query': direction_query,
+        'ire_query': ire_query,
+        'type_query': type_query
+    }
+    return render(request, 'admin/admin_dashboard.html', context)
 
 
 @login_required

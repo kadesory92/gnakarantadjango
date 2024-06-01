@@ -2,47 +2,6 @@
 
 {% block content %}
 
-<p>Bienvenue sur le tableau de bord administrateur.</p>
-
-<!-- Statistiques -->
-<div class="row">
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card bg-primary text-white shadow">
-            <div class="card-body">
-                Établissements
-                <div class="text-white-50 small">Total: 150</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card bg-success text-white shadow">
-            <div class="card-body">
-                Étudiants
-                <div class="text-white-50 small">Total: 10,000</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card bg-info text-white shadow">
-            <div class="card-body">
-                Enseignants
-                <div class="text-white-50 small">Total: 800</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card bg-warning text-white shadow">
-            <div class="card-body">
-                Cours
-                <div class="text-white-50 small">Total: 1,200</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="card mb-4">
     <div class="d-flex justify-content-between card-header">
@@ -60,29 +19,42 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Nom</th>
-                        <th>Localisation</th>
-                        <th>Nombre d'Étudiants</th>
-                        <th>Nombre d'Enseignants</th>
+                        <th>Name</th>
+                        <th>Founder</th>
+                        <th>Direction</th>
+                        <th>Type</th>
+                        <th>Level</th>
+                        <th>Address Email</th>
+                        <th>Site Web</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for school in schools %}
                     <tr>
-                        <td>École Primaire Alpha</td>
-                        <td>Conakry</td>
-                        <td>500</td>
-                        <td>30</td>
+                        <td>{{school.name}}</td>
+                        {% if school.founder == null %}
+                            <td>{{school.direction.name}}</td>
+                        {% else %}
+                            <td>{{school.founder.lastname}} {{school.founder.lastname}}</td>
+                        {% endif %}
+                        <td>{{school.direction.name}}</td>
+                        <td>{{school.type}}</td>
+                        <td>{{school.level}}</td>
+                        <td>{{school.address_email}}</td>
+                        <td><a href="{{ school.site_web }}">{{ school.site_web }}</a></td>
                         <td>
-                            <a href="#" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{% url 'detail_school' school.id %}" class="btn btn-info btn-sm">Voir</a>
                             <a href="#" class="btn btn-warning btn-sm">Modifier</a>
                             <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
                         </td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 
 {% endblock %}

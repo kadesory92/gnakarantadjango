@@ -1,0 +1,53 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DPE Dashboard{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/layout_service_styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="the_navbar">
+        {% include 'service/inc/navbar.html' %}
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="the_sidebar">
+                {% include 'service/inc/sidebar.html' %}
+            </div>
+            <main role="main" class="main col-md-9 ml-sm-auto col-lg-10 px-4">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <div class="the_footer">
+        {% include 'service/inc/footer.html' %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            feather.replace();
+            $('.nav-link').on('click', function() {
+                var $this = $(this);
+                var target = $this.attr('href');
+                if ($(target).hasClass('show')) {
+                    $(target).collapse('hide');
+                } else {
+                    $('.collapse').collapse('hide');
+                    $(target).collapse('show');
+                }
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+-->

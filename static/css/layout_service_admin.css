@@ -1,0 +1,79 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+.navbar-brand, .nav-link {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.navbar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.sidebar {
+  background: #f8f9fa;
+}
+.sidebar .nav-link {
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.sidebar .nav-link:hover {
+  background: #e2e6ea;
+  color: #007bff;
+}
+.sidebar .nav-link.active {
+  background: #007bff;
+  color: #fff;
+  font-weight: 700;
+}
+.sidebar .nav .collapse .nav-link {
+  padding-left: 2rem;
+}
+#main-content h1 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  color: #333;
+}
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 8px;
+}
+.card-title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: #007bff;
+}
+.card-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: #333;
+}
+.footer {
+  background: #e3f2fd;
+  color: #fff;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+}
+#sidebar {
+  transition: all 0.3s;
+}
+#sidebar.collapsed {
+  margin-left: -250px;
+}
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -250px;
+  }
+  #sidebar.collapsed {
+    margin-left: 0;
+  }
+}
+#main-content {
+  transition: all 0.3s;
+}
+#main-content.expanded {
+  margin-left: 0;
+}
