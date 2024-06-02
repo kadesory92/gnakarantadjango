@@ -4,10 +4,7 @@ from account.models import User
 
 
 class Service(models.Model):
-    objects = None
-    name = models.CharField(max_length=100)
-    type_service = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, choices=(
+    REGION = [
         ('national', 'National'),
         ('Boké', 'Boké'),
         ('Conakry', 'Conakry'),
@@ -17,10 +14,23 @@ class Service(models.Model):
         ('Labé', 'Labé'),
         ('Mamou', 'Mamou'),
         ("N'Zérékoré", "N'Zérékoré")
-    ))
-    commune = models.CharField(max_length=100, blank=True, null=True)
-    prefecture = models.CharField(max_length=100, blank=True, null=True)
-    sous_prefecture = models.CharField(max_length=100, blank=True, null=True)
+    ]
+
+    TYPE_SERVICE = [
+        ('ministerial_cabinet', 'Cabinet Ministériel'),
+        ('national_directorat', 'Direction Nationale'),
+        ('ire', 'Inspection Régionale'),
+        ('dpe', 'Direction Préfectorale de l\'Education'),
+        ('dce', 'Direction Communale de l\'Education'),
+
+    ]
+    objects = None
+    name = models.CharField(max_length=200)
+    type_service = models.CharField(max_length=200, choices=TYPE_SERVICE)
+    region = models.CharField(max_length=200, choices=REGION)
+    commune = models.CharField(max_length=200, blank=True, null=True)
+    prefecture = models.CharField(max_length=200, blank=True, null=True)
+    sous_prefecture = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name

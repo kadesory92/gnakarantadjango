@@ -27,5 +27,15 @@ def role_required(roles):
             if request.user.role not in roles:
                 raise PermissionDenied("You do not have the required role.")
             return view_func(request, *args, **kwargs)
+
         return _wrapped_view
+
     return decorator
+
+
+def has_role(user, roles):
+    return user.role in roles
+
+
+def is_school_role(user):
+    return user.role in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']

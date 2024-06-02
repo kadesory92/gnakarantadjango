@@ -6,6 +6,7 @@ from service.models import Service
 
 
 class Teacher(models.Model):
+    objects = None
     GENDER = [
         ('female', 'Féminin'),
         ('male', 'Masculin'),
@@ -45,6 +46,7 @@ class SchoolTeacher(models.Model):
 
 
 class Subject(models.Model):
+    objects = None
     name = models.CharField(max_length=200)
     coefficient = models.IntegerField()
 
@@ -99,11 +101,13 @@ class Course(models.Model):
 
 
 class Student(models.Model):
+    DoesNotExist = None
     objects = None
     GENDER = [
         ('female', 'Féminin'),
         ('male', 'Masculin'),
     ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=200)
     firstname = models.CharField(max_length=200)
     date_of_birth = models.DateField()
@@ -119,6 +123,7 @@ class Student(models.Model):
 
 
 class Enrollment(models.Model):
+    objects = None
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     school = models.ForeignKey(School, related_name='current_school', on_delete=models.CASCADE)

@@ -8,7 +8,7 @@ class ServiceForm(forms.ModelForm):
         fields = ['name', 'type_service', 'region', 'commune', 'prefecture', 'sous_prefecture']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'type_service': forms.TextInput(attrs={'class': 'form-control'}),
+            'type_service': forms.Select(attrs={'class': 'form-control'}),
             'region': forms.Select(attrs={'class': 'form-control'}),
             'commune': forms.TextInput(attrs={'class': 'form-control'}),
             'prefecture': forms.TextInput(attrs={'class': 'form-control'}),
