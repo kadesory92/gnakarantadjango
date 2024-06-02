@@ -1,0 +1,143 @@
+{% extends 'service/layout.html' %}
+
+{% block title %}DPE Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h3 mt-3">Dashboard</h1>
+    </div>
+
+      <!-- Content -->
+    <div class="row">
+        <div class="col-md-3">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Total Students</h5>
+              <h1 class="card-text">500</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Total Teachers</h5>
+              <h1 class="card-text">50</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Total Students</h5>
+              <h1 class="card-text">500</h1>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Total Teachers</h5>
+              <h1 class="card-text">50</h1>
+            </div>
+          </div>
+        </div>
+        <!-- More content here -->
+    </div>
+
+
+    <!-- Formulaire de recherche et de filtrage -->
+<form method="GET" action="{% url 'service_dashboard' %}">
+    <input type="text" name="search" placeholder="Recherche" value="{{ search_query }}">
+    <!--<select name="role">
+        <option value="">Tous les rôles</option>
+        <option value="STUDENT" {% if filter_by_role == "STUDENT" %}selected{% endif %}>Étudiant</option>
+        <option value="TEACHER" {% if filter_by_role == "TEACHER" %}selected{% endif %}>Enseignant</option>
+        <option value="SCHOOL_STAFF" {% if filter_by_role == "SCHOOL_STAFF" %}selected{% endif %}>Personnel de l'école</option>
+    </select>-->
+    <button type="submit">Rechercher</button>
+</form>
+
+<h2>Schools</h2>
+<ul>
+    {% for school in schools %}
+    <li>{{ school.name }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Students</h2>
+<ul>
+    {% for student in students %}
+    <li>{{ student.user.username }} ({{ student.school.name }})</li>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if students.has_previous %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_students=1">&laquo; first</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_students={{ students.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ students.number }} of {{ students.paginator.num_pages }}.
+        </span>
+
+        {% if students.has_next %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_students={{ students.next_page_number }}">next</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_students={{ students.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<h2>Teachers</h2>
+<ul>
+    {% for teacher in teachers %}
+    <li>{{ teacher.user.username }} ({{ teacher.school.name }})</li>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if teachers.has_previous %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_teachers=1">&laquo; first</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_teachers={{ teachers.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ teachers.number }} of {{ teachers.paginator.num_pages }}.
+        </span>
+
+        {% if teachers.has_next %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_teachers={{ teachers.next_page_number }}">next</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_teachers={{ teachers.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<h2>Staff</h2>
+<ul>
+    {% for staff_member in staff %}
+    <li>{{ staff_member.user.username }} ({{ staff_member.school.name }})</li>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if staff.has_previous %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_staff=1">&laquo; first</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_staff={{ staff.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ staff.number }} of {{ staff.paginator.num_pages }}.
+        </span>
+
+        {% if staff.has_next %}
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_staff={{ staff.next_page_number }}">next</a>
+            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if filter_by_role %}role={{ filter_by_role }}&{% endif %}page_staff={{ staff.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
+</div>
+{% endblock %}

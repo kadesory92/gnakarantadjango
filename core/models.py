@@ -2,6 +2,7 @@ from django.db import models
 
 from account.models import User
 from school.models import School
+from service.models import Service
 
 
 class Teacher(models.Model):
@@ -16,6 +17,7 @@ class Teacher(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    direction = models.ForeignKey(Service, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
     date_of_birth = models.DateField()

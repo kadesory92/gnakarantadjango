@@ -27,6 +27,7 @@ class Service(models.Model):
 
 
 class Employee(models.Model):
+    DoesNotExist = None
     objects = None
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=100)

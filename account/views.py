@@ -77,7 +77,7 @@ def admin_dashboard(request):
 
 
 @login_required
-def dashboard(request):
+def dashboard_redirect(request):
     user = request.user
     if user.role == 'ADMIN':
         return redirect('admin-dashboard')
