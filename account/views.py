@@ -81,9 +81,9 @@ def dashboard_redirect(request):
     user = request.user
     if user.role == 'ADMIN':
         return redirect('admin-dashboard')
-    if user.role in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER', 'SCHOOL_STAFF']:
+    if user.role in ['ADMIN', 'SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER', 'SCHOOL_STAFF']:
         return redirect('school_dashboard')
-    if user.role in ['SERVICE_ADMIN', 'SERVICE_MANAGER', 'ADMIN_IRE', 'ADMIN_DPE', 'ADMIN_DCE']:
+    if user.role in ['ADMIN', 'SERVICE_ADMIN', 'SERVICE_MANAGER', 'ADMIN_IRE', 'ADMIN_DPE', 'ADMIN_DCE']:
         return redirect('service_dashboard')
     else:
         return redirect('error')

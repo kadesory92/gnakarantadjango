@@ -1,0 +1,68 @@
+{% extends 'service/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="card" style="margin-top:150px;">
+        <div class="d-flex justify-content-between card-header">
+            <div class="h4">Gérer les enseignants : {{ direction.name }}</div>
+            <form method="get">
+                <input type="text" name="q" value="{{ query }}" placeholder="Rechercher par nom, prénom, genre ou statut">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Date de naissance</th>
+                        <th>Genre</th>
+                        <th>Téléphone</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers_page %}
+                    <tr>
+                        <td>{{ teacher.lastname }}</td>
+                        <td>{{ teacher.firstname }}</td>
+                        <td>{{ teacher.date_of_birth }}</td>
+                        <td>{{ teacher.get_gender_display }}</td>
+                        <td>{{ teacher.phone }}</td>
+                        <td>{{ teacher.get_status_display }}</td>
+                        <td>
+                            <!-- Ajoutez ici les liens vers les actions supplémentaires si nécessaire -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="pagination">
+                <span class="step-links">
+                    {% if teachers_page.has_previous %}
+                        <a href="?page=1{% if query %}&q={{ query }}{% endif %}">&laquo; Première</a>
+                        <a href="?page={{ teachers_page.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Précédente</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ teachers_page.number }} sur {{ teachers_page.paginator.num_pages }}.
+                    </span>
+
+                    {% if teachers_page.has_next %}
+                        <a href="?page={{ teachers_page.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Suivante</a>
+                        <a href="?page={{ teachers_page.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Dernière &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

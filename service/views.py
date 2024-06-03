@@ -4,17 +4,90 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import OperationalError
+from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.decorators import required_role
 from account.forms import EmployeeForm
-from core.models import Student
+from core.models import Student, Teacher
 from school.models import School, Staff
 from .forms import ServiceForm, EmployeeAssignmentForm
 from django.contrib import messages
 
 from .models import Service, Employee
+
+
+@login_required(login_url='login')
+def service_dashboard(request):
+    user = request.user
+
+    # Vérifier si l'utilisateur a un rôle autorisé
+    if user.role not in ['ADMIN_DPE', 'ADMIN_DCE', 'STAFF_DPE', 'STAFF_DCE']:
+        raise PermissionDenied
+
+    # Récupérer l'employé associé à l'utilisateur connecté
+    employee = get_object_or_404(Employee, user=user)
+
+    # Récupérer le service associé à l'employé
+    service = employee.service
+
+    # Récupérer toutes les écoles liées à ce service
+    schools = School.objects.filter(direction=service)
+
+    # Récupérer les enseignants liés au service
+    teachers = Teacher.objects.filter(direction=service)
+
+    # Récupérer le nombre d'élèves par école
+    school_stats = schools.annotate(num_students=Count('student'))
+
+    # Récupérer le nombre total d'élèves pour le service
+    total_students = Student.objects.filter(school__in=schools).count()
+
+    # Récupérer le nombre total d'enseignants pour le service
+    total_teachers = teachers.count()
+
+    # Recherche et filtrage
+    school_query = request.GET.get('q')
+    teacher_query = request.GET.get('p')
+    if school_query:
+        school_stats = school_stats.filter(
+            Q(name__icontains=school_query) |
+            Q(type__icontains=school_query) |
+            Q(category__icontains=school_query) |
+            Q(level__icontains=school_query)
+        )
+
+    if teacher_query:
+        teachers = teachers.filter(
+            Q(firstname__icontains=teacher_query) |
+            Q(lastname__icontains=teacher_query) |
+            Q(phone__icontains=teacher_query) |
+            Q(address__icontains=teacher_query)
+        )
+
+    # Pagination pour les écoles
+    paginator_schools = Paginator(school_stats, 10)  # 10 écoles par page
+    page_number_schools = request.GET.get('page_schools')
+    page_schools = paginator_schools.get_page(page_number_schools)
+
+    # Pagination pour les enseignants
+    paginator_teachers = Paginator(teachers, 10)  # 10 enseignants par page
+    page_number_teachers = request.GET.get('page_teachers')
+    page_teachers = paginator_teachers.get_page(page_number_teachers)
+
+    context = {
+        'service': service,
+        'schools': page_schools,
+        'teachers': page_teachers,
+        'total_students': total_students,
+        'total_teachers': total_teachers,
+        'school_query': school_query,
+        'teacher_query': teacher_query,
+    }
+
+    return render(request, 'service/admin/dashboard_service.html', context)
 
 
 def manage_service(request):
@@ -235,109 +308,6 @@ def assign_employee_to_service(request, employee_id):
         form = EmployeeAssignmentForm(instance=employee)
 
     return render(request, 'employee/assign_to_service.html', {'form': form, 'employee': employee})
-
-
-@login_required(login_url='login')
-def service_dashboard(request):
-    user = request.user
-
-    # Vérification du rôle de l'utilisateur pour déterminer le service concerné
-    if user.role not in ['ADMIN_DPE', 'ADMIN_DCE', 'ADMIN_IRE']:
-        raise PermissionDenied
-
-    try:
-        # Récupérer l'employé lié à l'utilisateur connecté
-        employee = Employee.objects.get(user=user)
-
-        # Déterminer le service concerné en fonction du rôle de l'utilisateur
-        if user.role == 'ADMIN_IRE':
-            user_service = employee.service
-            # Récupérer toutes les écoles sous cette inspection régionale (ire)
-            schools = School.objects.filter(ire=user_service)
-        else:
-            user_service = employee.service
-            # Récupérer toutes les écoles sous cette direction
-            schools = School.objects.filter(direction=user_service)
-
-        # Récupérer les critères de recherche et de filtrage des paramètres de la requête
-        search_query = request.GET.get('search', '')
-        filter_by_role = request.GET.get('role', '')
-
-        # Filtrer les étudiants, enseignants et personnels des écoles sous la direction ou l'ire
-        students = Student.objects.filter(school__in=schools, user__username__icontains=search_query)
-        teachers = Staff.objects.filter(school__in=schools, user__role='TEACHER',
-                                        user__username__icontains=search_query)
-        staff = Staff.objects.filter(school__in=schools).exclude(user__role='TEACHER').filter(
-            user__username__icontains=search_query)
-
-        if filter_by_role:
-            students = students.filter(user__role=filter_by_role)
-            teachers = teachers.filter(user__role=filter_by_role)
-            staff = staff.filter(user__role=filter_by_role)
-
-        # Pagination
-        paginator_students = Paginator(students, 10)  # 10 étudiants par page
-        paginator_teachers = Paginator(teachers, 10)  # 10 enseignants par page
-        paginator_staff = Paginator(staff, 10)  # 10 personnels par page
-
-        page_number_students = request.GET.get('page_students', 1)
-        page_number_teachers = request.GET.get('page_teachers', 1)
-        page_number_staff = request.GET.get('page_staff', 1)
-
-        students_page = paginator_students.get_page(page_number_students)
-        teachers_page = paginator_teachers.get_page(page_number_teachers)
-        staff_page = paginator_staff.get_page(page_number_staff)
-
-        context = {
-            'schools': schools,
-            'students': students_page,
-            'teachers': teachers_page,
-            'staff': staff_page,
-            'search_query': search_query,
-            'filter_by_role': filter_by_role,
-        }
-
-        return render(request, 'service/admin/dashboard.html', context)
-
-    except Employee.DoesNotExist:
-        raise PermissionDenied
-
-
-# @login_required
-# def service_dashboard(request):
-#     user = request.user
-#
-#     # Vérifiez que l'utilisateur est un employé avec le rôle approprié
-#     if user.role not in ['ADMIN_DPE', 'ADMIN_DCE']:
-#         raise PermissionDenied
-#
-#     try:
-#         # Récupérer l'employé lié à l'utilisateur connecté
-#         employee = Employee.objects.get(user=user)
-#
-#         # Récupérer le service de cet employé
-#         user_service = employee.service
-#
-#         # Récupérer toutes les écoles sous cette direction
-#         schools = School.objects.filter(direction=user_service)
-#
-#         # Récupérer tous les étudiants, enseignants et personnels des écoles sous la direction
-#         students = Student.objects.filter(school__in=schools)
-#         teachers = Teacher.objects.filter(school__in=schools)
-#         staff = Staff.objects.filter(school__in=schools)
-#
-#         context = {
-#             'schools': schools,
-#             'students': students,
-#             'teachers': teachers,
-#             'staff': staff,
-#         }
-#
-#         return render(request, 'service/admin/dashboard.html', context)
-#
-#     except Employee.DoesNotExist:
-#         raise PermissionDenied
-
 
 
 

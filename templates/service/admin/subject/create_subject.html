@@ -1,0 +1,31 @@
+{% extends 'service/layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <div class="card" style="margin-top:100px;">
+        <div class="card-header"><h4>Enregistrer de Matières enseignées</h4></div>
+        <div class="card-body">
+
+            <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                <div class="justify-content-center row">
+                    <div class="col-10">
+                        <div class="card">
+                            <div class="card-header">Info Subject</div>
+                            <div class="card-body">
+                                {{ subject_form.as_p }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit">Enregistrer</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

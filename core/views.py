@@ -27,7 +27,22 @@ def school_dashboard(request):
 @login_required(login_url='login')
 def list_subject(request):
     subjects = Subject.objects.all()
-    return render(request, 'subject_list.html', {'subjects': subjects})
+    # Filtrage et recherche
+    query = request.GET.get('q')
+    if query:
+        subjects = subjects.filter(Q(name__icontains=query))
+
+    # Ajouter la pagination
+    paginator = Paginator(subjects, 10)  # 10 sujets par page
+    page_number = request.GET.get('page')
+    subjects_page = paginator.get_page(page_number)
+
+    context = {
+        'subjects_page': subjects_page,
+        'query': query,
+    }
+
+    return render(request, 'service/admin/subject/list_subjects.html', context)
 
 
 @login_required(login_url='login')
@@ -39,12 +54,12 @@ def create_subject(request):
             return redirect('subject_list')
     else:
         subject_form = SubjectForm()
-    return render(request, 'subject_form.html', {'subject_form': subject_form})
+    return render(request, 'service/admin/subject/create_subject.html', {'subject_form': subject_form})
 
 
 @login_required(login_url='login')
-def edit_subject(request, pk):
-    subject = get_object_or_404(Subject, pk=pk)
+def edit_subject(request, id):
+    subject = get_object_or_404(Subject, pk=id)
     if request.method == 'POST':
         subject_form = SubjectForm(request.POST, instance=subject)
         if subject_form.is_valid():
@@ -52,7 +67,7 @@ def edit_subject(request, pk):
             return redirect('subject_list')
     else:
         subject_form = SubjectForm(instance=subject)
-    return render(request, 'subject_form.html', {'subject_form': subject_form})
+    return render(request, 'service/admin/subject/edit_subject.html', {'subject_form': subject_form})
 
 
 @login_required(login_url='login')

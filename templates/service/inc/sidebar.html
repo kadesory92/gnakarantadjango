@@ -2,7 +2,7 @@
     <div class="position-sticky">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link active round-3" aria-current="page" href="#">
+            <a class="nav-link active round-3" aria-current="page" href="{% url 'service_dashboard' %}">
               <i class="fas fa-tachometer-alt me-2"></i>
               Dashboard
             </a>
@@ -25,7 +25,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#studentsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <a class="nav-link dropdown-toggle" href="#studentsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
               <i class="fas fa-user-graduate me-2"></i>
               Students
             </a>
@@ -42,11 +42,38 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link dropdown-toggle" href="#teachersSubmenu" data-bs-toggle="collapse" aria-expanded="false">
               <i class="fas fa-chalkboard-teacher me-2"></i>
               Teachers
             </a>
+            <ul class="collapse nav flex-column ms-3" id="teachersSubmenu">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'create_teacher' %}">Add Teacher</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'teacher_by_direction' %}">Manage Teacher</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Attendance</a>
+              </li>
+            </ul>
           </li>
+
+          <li class="nav-item">
+            <a class="nav-link dropdown-toggle" href="#subjectsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+              <i class="fas fa-chalkboard-teacher me-2"></i>
+              Subjects
+            </a>
+            <ul class="collapse nav flex-column ms-3" id="subjectsSubmenu">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'create_subject' %}">Add Subject</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'list_subject' %}">Manage Subject</a>
+              </li>
+            </ul>
+          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="#">
               <i class="fas fa-user-friends me-2"></i>

@@ -9,7 +9,7 @@ from account.forms import UserForm
 from core.forms import TeacherForm, TeachingForm, SchoolTeacherForm
 from core.models import Teacher, SchoolTeacher
 from school.models import School
-from service.models import Employee
+from service.models import Employee, Service
 
 
 # GESION DES PROFESSEUR
@@ -61,6 +61,46 @@ def manage_teacher_by_school(request):
     }
 
     return render(request, 'core/school/teacher/manage_teacher_by_school.html', context)
+
+
+@login_required(login_url='login')
+def manage_teacher_by_direction(request):
+    user = request.user
+
+    # Vérifiez si l'utilisateur a le rôle requis pour gérer les enseignants
+    if user.role not in ['ADMIN_DPE', 'ADMIN_DCE', 'SERVICE_ADMIN', 'SERVICE_MANAGER']:
+        raise PermissionDenied
+
+    # Récupérer l'employé et la direction liée à l'utilisateur connecté
+    employee = get_object_or_404(Employee, user=user)
+    direction = employee.service
+
+    # Récupérer les enseignants de la direction
+    teachers = Teacher.objects.filter(direction=direction).distinct()
+
+    # Filtrage et recherche
+    query = request.GET.get('q')
+
+    if query:
+        teachers = teachers.filter(
+            Q(firstname__icontains=query) |
+            Q(lastname__icontains=query) |
+            Q(gender__icontains=query) |
+            Q(status__icontains=query)
+        )
+
+    # Ajouter la pagination
+    paginator = Paginator(teachers, 10)  # 10 enseignants par page
+    page_number = request.GET.get('page')
+    teachers_page = paginator.get_page(page_number)
+
+    context = {
+        'direction': direction,
+        'teachers_page': teachers_page,
+        'query': query,
+    }
+
+    return render(request, 'service/admin/teacher/list_teacher_by_direction.html', context)
 
 
 @login_required(login_url='login')
