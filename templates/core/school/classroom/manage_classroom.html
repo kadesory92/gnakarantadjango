@@ -1,0 +1,54 @@
+<!-- templates/core/school/classroom/manage_classroom.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Gérer les salles de classe</h2>
+
+<form method="get">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Rechercher par nom ou capacité">
+    <button type="submit">Rechercher</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Capacité</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for classroom in classrooms_page %}
+        <tr>
+            <td>{{ classroom.name }}</td>
+            <td>{{ classroom.capacity }}</td>
+            <td>
+                <a href="{% url 'detail_classroom' classroom.id %}">Détails</a>
+                <a href="{% url 'edit_classroom' classroom.id %}">Éditer</a>
+                <a href="{% url 'delete_classroom' classroom.id %}">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if classrooms_page.has_previous %}
+            <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; Première</a>
+            <a href="?page={{ classrooms_page.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Précédente</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ classrooms_page.number }} sur {{ classrooms_page.paginator.num_pages }}.
+        </span>
+
+        {% if classrooms_page.has_next %}
+            <a href="?page={{ classrooms_page.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Suivante</a>
+            <a href="?page={{ classrooms_page.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Dernière &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<a href="{% url 'create_classroom' %}">Ajouter une salle de classe</a>
+{% endblock %}

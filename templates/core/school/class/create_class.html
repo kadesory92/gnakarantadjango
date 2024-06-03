@@ -1,0 +1,14 @@
+<!-- templates/core/school/study_class/create_class.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ajouter une classe</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ study_class_form.as_p }}
+    <button type="submit">Ajouter</button>
+</form>
+
+<a href="{% url 'manage_class' %}">Retour à la gestion des classes</a>
+{% endblock %}

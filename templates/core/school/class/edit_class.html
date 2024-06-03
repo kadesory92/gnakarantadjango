@@ -1,0 +1,14 @@
+<!-- templates/core/school/study_class/edit_class.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Éditer la classe</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ study_class_form.as_p }}
+    <button type="submit">Éditer</button>
+</form>
+
+<a href="{% url 'manage_class' %}">Retour à la gestion des classes</a>
+{% endblock %}

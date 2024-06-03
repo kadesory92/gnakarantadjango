@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Enregistrer un enseignant</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    {{ teacher_form.as_p }}
+    <button type="submit">Enregistrer</button>
+</form>
+{% endblock %}

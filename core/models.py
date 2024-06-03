@@ -80,6 +80,7 @@ class StudyClass(models.Model):
 
 
 class Classroom(models.Model):
+    objects = None
     name = models.CharField(max_length=200)
     capacity = models.IntegerField()
 

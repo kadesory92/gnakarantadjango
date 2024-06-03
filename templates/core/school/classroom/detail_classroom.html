@@ -1,0 +1,13 @@
+<!-- templates/core/school/classroom/detail_classroom.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Détails de la salle de classe</h2>
+
+<p><strong>Nom :</strong> {{ classroom.name }}</p>
+<p><strong>Capacité :</strong> {{ classroom.capacity }}</p>
+
+<a href="{% url 'manage_classroom' %}">Retour à la gestion des salles de classe</a>
+<a href="{% url 'edit_classroom' classroom.id %}">Éditer</a>
+<a href="{% url 'delete_classroom' classroom.id %}">Supprimer</a>
+{% endblock %}

@@ -1,0 +1,14 @@
+<!-- templates/core/school/classroom/delete_classroom.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Supprimer la salle de classe</h2>
+
+<p>Êtes-vous sûr de vouloir supprimer la salle de classe {{ classroom.name }} ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Supprimer</button>
+    <a href="{% url 'manage_classroom' %}">Annuler</a>
+</form>
+{% endblock %}

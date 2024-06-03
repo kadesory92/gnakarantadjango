@@ -1,16 +1,13 @@
-from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.core.paginator import Paginator
+from django.db.models import Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
 
-from account.decorators import has_role, role_required
-from account.forms import UserForm
-from core.forms import TeacherForm, StudentForm, EnrollmentForm, SchoolTeacherForm, SubjectForm, StudyClassForm, \
-    TeachingForm
-from core.models import Student, Teacher, SchoolTeacher, Subject, StudyClass, Enrollment
+from core.forms import SubjectForm, StudyClassForm, \
+    TeachingForm, ClassroomForm
+from core.models import Subject, StudyClass, Enrollment, Classroom
 from school.models import School
 from service.models import Employee
 
@@ -24,126 +21,16 @@ def school_dashboard(request):
     return render(request, 'core/school/dashboard.html')
 
 
-# GESION DES PROFESSEUR
-
-
-@login_required
-def manage_teacher(request, school_id):
-    school = get_object_or_404(School, pk=school_id)
-    teachers = Teacher.objects.filter(direction__school=school)
-
-    # Filtrage et recherche
-    query = request.GET.get('q')
-    gender_filter = request.GET.get('gender')
-    status_filter = request.GET.get('status')
-
-    if query:
-        teachers = teachers.filter(Q(firstname__icontains=query) | Q(lastname__icontains=query))
-
-    if gender_filter:
-        teachers = teachers.filter(gender=gender_filter)
-
-    if status_filter:
-        teachers = teachers.filter(status=status_filter)
-
-    context = {
-        'school': school,
-        'teachers': teachers,
-    }
-
-    return render(request, 'core/school/teacher/manage_teacher.html', context)
+# SUBJECT MANAGEMENT
 
 
 @login_required(login_url='login')
-@role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE'])
-def register_teacher(request):
-    # if not has_role(request.user, ['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE']):
-    #     return redirect('home')  # Rediriger si l'utilisateur n'a pas les droits
-
-    if request.method == 'POST':
-        user_form = UserForm(request.POST)
-        teacher_form = TeacherForm(request.POST, request.FILES)
-        if user_form.is_valid() and teacher_form.is_valid():
-            user = user_form.save(commit=False)
-            user.set_password(user_form.cleaned_data['password'])
-            user.save()
-
-            teacher = teacher_form.save(commit=False)
-            teacher.user = user
-            teacher.save()
-
-            return redirect('teacher_list')  # Rediriger vers la liste des enseignants ou une autre page
-    else:
-        user_form = UserForm()
-        teacher_form = TeacherForm()
-
-    return render(request, 'service/admin/teacher/register_teacher.html', {
-        'user_form': user_form,
-        'teacher_form': teacher_form
-    })
-
-
-def detail_teacher(request):
-    return render(request, 'core/school/teacher/edit_teacher.html')
-
-
-@login_required
-def edit_teacher(request, pk):
-    if not has_role(request.user, ['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE']):
-        return redirect('home')
-    teacher = get_object_or_404(Teacher, pk=pk)
-    if request.method == 'POST':
-        teacher_form = TeacherForm(request.POST, request.FILES, instance=teacher)
-        if teacher_form.is_valid():
-            teacher_form.save()
-            return redirect('detail_teacher', pk=teacher.pk)
-    else:
-        teacher_form = TeacherForm(instance=teacher)
-    return render(request, 'edit_teacher.html', {'teacher_form': teacher_form, 'teacher': teacher})
-
-
-@login_required
-def delete_teacher(request, pk):
-    if not has_role(request.user, ['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE']):
-        return redirect('home')
-    teacher = get_object_or_404(Teacher, pk=pk)
-    if request.method == 'POST':
-        teacher.delete()
-        return redirect('teacher_list')
-    return render(request, 'delete_teacher.html', {'teacher': teacher})
-
-
-@login_required
-@role_required('SCHOOL')
-def assign_teacher(request):
-    if request.method == 'POST':
-        form = SchoolTeacherForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('manage_teacher', school_id=form.cleaned_data['school'].id)
-    else:
-        form = SchoolTeacherForm()
-    return render(request, 'assign_teacher.html', {'form': form})
-
-
-def un_assign_teacher(request, school_teacher_id):
-    school_teacher = get_object_or_404(SchoolTeacher, id=school_teacher_id)
-    if request.method == 'POST':
-        school_teacher.delete()
-        return redirect('manage_teacher', school_id=school_teacher.school.id)
-    return render(request, 'un_assign_teacher.html', {'school_teacher': school_teacher})
-
-
-# GESTION DES MATIERES
-
-
-@login_required
 def list_subject(request):
     subjects = Subject.objects.all()
     return render(request, 'subject_list.html', {'subjects': subjects})
 
 
-@login_required
+@login_required(login_url='login')
 def create_subject(request):
     if request.method == 'POST':
         subject_form = SubjectForm(request.POST)
@@ -155,7 +42,7 @@ def create_subject(request):
     return render(request, 'subject_form.html', {'subject_form': subject_form})
 
 
-@login_required
+@login_required(login_url='login')
 def edit_subject(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     if request.method == 'POST':
@@ -168,7 +55,7 @@ def edit_subject(request, pk):
     return render(request, 'subject_form.html', {'subject_form': subject_form})
 
 
-@login_required
+@login_required(login_url='login')
 def delete_subject(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     if request.method == 'POST':
@@ -177,7 +64,58 @@ def delete_subject(request, pk):
     return render(request, 'subject_confirm_delete.html', {'subject': subject})
 
 
-@login_required
+@login_required(login_url='login')
+def create_teaching(request):
+    if request.method == 'POST':
+        teaching_form = TeachingForm(request.POST)
+        if teaching_form.is_valid():
+            teaching_form.save()
+            return redirect('success_page')  # Rediriger vers une page de succès
+    else:
+        teaching_form = TeachingForm()
+    return render(request, 'teaching_form.html', {'form': teaching_form})
+
+
+# GESTION DES CLASSES
+
+
+@login_required(login_url='login')
+def manage_studyClass(request):
+    user = request.user
+
+    # Vérifiez si l'utilisateur a le rôle requis pour gérer les classes
+    if user.role not in ['SCHOOL_ADMIN', 'SCHOOL_MANAGER', 'SCHOOL']:
+        raise PermissionDenied
+
+    # Récupérer l'école liée à l'utilisateur connecté
+    if user.role == 'SCHOOL':
+        school = School.objects.get(user=user)
+    else:
+        employee = Employee.objects.get(user=user)
+        school = employee.service
+
+    # Initialisez les critères de recherche et de filtrage
+    search_query = request.GET.get('search', '')
+
+    # Filtrer les classes par l'école et par les critères de recherche
+    study_classes = StudyClass.objects.filter(school=school).annotate(student_count=Count('students')).filter(student_count__gt=0).order_by('name')
+    if search_query:
+        study_classes = study_classes.filter(Q(name__icontains=search_query) | Q(designation__icontains=search_query))
+
+    # Ajouter la pagination
+    paginator = Paginator(study_classes, 10)  # 10 classes par page
+    page_number = request.GET.get('page')
+    study_classes_page = paginator.get_page(page_number)
+
+    context = {
+        'study_classes_page': study_classes_page,
+        'search_query': search_query,
+    }
+
+    return render(request, 'core/school/class/manage_class.html', context)
+
+
+@login_required(login_url='login')
 def create_studyClass(request):
     if request.method == 'POST':
         studyClass = SubjectForm(request.POST)
@@ -189,7 +127,7 @@ def create_studyClass(request):
     return render(request, 'class_form.html', {'studyClass': studyClass})
 
 
-@login_required
+@login_required(login_url='login')
 def edit_studyClass(request, pk):
     studyClass = get_object_or_404(StudyClass, pk=pk)
     if request.method == 'POST':
@@ -202,139 +140,179 @@ def edit_studyClass(request, pk):
     return render(request, 'subject_form.html', {'studyClass_form': studyClass_form})
 
 
-@login_required
-def delete_studyClass(request, pk):
-    studyClass = get_object_or_404(StudyClass, pk=pk)
-    if request.method == 'POST':
-        studyClass.delete()
-        return redirect('list_classes')
-    return render(request, 'class_confirm_delete.html', {'studyClass': studyClass})
+@login_required(login_url='login')
+def detail_studyClass(request, class_id):
+    study_class = get_object_or_404(StudyClass, id=class_id)
 
-
-def create_teaching(request):
-    if request.method == 'POST':
-        teaching_form = TeachingForm(request.POST)
-        if teaching_form.is_valid():
-            teaching_form.save()
-            return redirect('success_page')  # Rediriger vers une page de succès
-    else:
-        teaching_form = TeachingForm()
-    return render(request, 'teaching_form.html', {'form': teaching_form})
+    return render(request, 'core/school/study_class/detail_class.html', {
+        'study_class': study_class
+    })
 
 
 @login_required(login_url='login')
-def create_student(request):
+def edit_studyClass(request, class_id):
+
+    study_class = get_object_or_404(StudyClass, id=class_id)
+
+    if request.method == 'POST':
+        study_class_form = StudyClassForm(request.POST, instance=study_class)
+        if study_class_form.is_valid():
+            study_class_form.save()
+            return redirect('manage_class')
+    else:
+        study_class_form = StudyClassForm(instance=study_class)
+
+    return render(request, 'core/school/study_class/edit_class.html', {
+        'study_class_form': study_class_form,
+        'study_class': study_class
+    })
+
+
+@login_required(login_url='login')
+def delete_studyClass(request, class_id):
+
+    study_class = get_object_or_404(StudyClass, id=class_id)
+
+    if request.method == 'POST':
+        study_class.delete()
+        return redirect('manage_class')
+
+    return render(request, 'core/school/study_class/delete_class.html', {
+        'study_class': study_class
+    })
+
+
+@login_required(login_url='login')
+def manage_classroom(request):
     user = request.user
 
-    # Vérifiez si l'utilisateur a le rôle requis pour ajouter un étudiant
+    # Vérifiez si l'utilisateur a le rôle requis pour gérer les salles de classe
     if user.role not in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
         raise PermissionDenied
 
-    try:
-        # Récupérer l'école liée à l'utilisateur connecté
-        if user.role == 'SCHOOL':
-            school = School.objects.get(user=user)
-        else:
-            employee = Employee.objects.get(user=user)
-            school = employee.service  # Assuming employee is linked to a service, update if necessary
+    # Récupérer l'école liée à l'utilisateur connecté
+    if user.role == 'SCHOOL':
+        school = School.objects.get(user=user)
+    else:
+        employee = Employee.objects.get(user=user)
+        school = employee.service
 
-        if request.method == 'POST':
-            student_form = StudentForm(request.POST, request.FILES)
+    # Initialisez les critères de recherche et de filtrage
+    search_query = request.GET.get('search', '')
 
-            if student_form.is_valid():
-                student = student_form.save(commit=False)
-                student.school = school
-                student.save()
+    # Filtrer les salles de classe par l'école et par les critères de recherche
+    classrooms = Classroom.objects.filter(school=school).order_by('name')
+    if search_query:
+        classrooms = classrooms.filter(Q(name__icontains=search_query) | Q(capacity__icontains=search_query))
 
-                # Stocker l'ID de l'étudiant dans la session pour le récupérer dans la vue suivante
-                request.session['student_id'] = student.id
+    # Ajouter la pagination
+    paginator = Paginator(classrooms, 10)  # 10 salles de classe par page
+    page_number = request.GET.get('page')
+    classrooms_page = paginator.get_page(page_number)
 
-                return redirect('create_parent')  # Rediriger vers le formulaire d'enregistrement de parent
+    context = {
+        'classrooms_page': classrooms_page,
+        'search_query': search_query,
+    }
 
-        else:
-            student_form = StudentForm()
-
-        context = {
-            'student_form': student_form,
-        }
-
-        return render(request, 'core/school/student/create_student.html', context)
-
-    except Employee.DoesNotExist:
-        raise PermissionDenied
+    return render(request, 'core/school/classroom/manage_classroom.html', context)
 
 
 @login_required(login_url='login')
-def enroll_student(request):
-    student_id = request.session.get('student_id')
+def create_classroom(request):
+    user = request.user
 
-    if not student_id:
-        return redirect(
-            'create_student')  # Rediriger vers la création de l'étudiant si l'ID de l'étudiant n'est pas trouvé
+    # Vérifiez si l'utilisateur a le rôle requis pour créer une salle de classe
+    if user.role not in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
+        raise PermissionDenied
 
-    try:
-        student = Student.objects.get(id=student_id)
-    except Student.DoesNotExist:
-        return redirect('create_student')  # Rediriger vers la création de l'étudiant si l'étudiant n'est pas trouvé
+    # Récupérer l'école liée à l'utilisateur connecté
+    if user.role == 'SCHOOL':
+        school = School.objects.get(user=user)
+    else:
+        employee = Employee.objects.get(user=user)
+        school = employee.service
 
     if request.method == 'POST':
-        enrollment_form = EnrollmentForm(request.POST)
-
-        if enrollment_form.is_valid():
-            enrollment = enrollment_form.save(commit=False)
-            enrollment.student = student
-            enrollment.school = student.school
-            enrollment.date_enrollment = timezone.now()
-            enrollment.save()
-
-            # Nettoyer l'ID de l'étudiant de la session après l'inscription
-            del request.session['student_id']
-
-            return redirect('service_dashboard')  # Rediriger vers le tableau de bord après l'inscription
-
+        classroom_form = ClassroomForm(request.POST)
+        if classroom_form.is_valid():
+            classroom = classroom_form.save(commit=False)
+            classroom.school = school
+            classroom.save()
+            return redirect('manage_classroom')
     else:
-        enrollment_form = EnrollmentForm()
+        classroom_form = ClassroomForm()
 
-    context = {
-        'enrollment_form': enrollment_form,
-        'student': student,
-    }
-
-    return render(request, 'core/school/enroll_student.html', context)
+    return render(request, 'core/school/classroom/create_classroom.html', {
+        'classroom_form': classroom_form
+    })
 
 
-@login_required
-def transfer_student(request, student_id):
-    # Récupérer l'élève à transférer
-    student = get_object_or_404(Student, pk=student_id)
+@login_required(login_url='login')
+def detail_classroom(request, classroom_id):
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+
+    user = request.user
+
+    # Vérifiez si l'utilisateur a le rôle requis pour voir les détails d'une salle de classe
+    if user.role not in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
+        raise PermissionDenied
+
+    # Vérifiez si l'utilisateur appartient à l'école de la salle de classe
+    if classroom.school.user != user and not Employee.objects.filter(user=user, service=classroom.school).exists():
+        raise PermissionDenied
+
+    return render(request, 'core/school/classroom/detail_classroom.html', {
+        'classroom': classroom
+    })
+
+
+@login_required(login_url='login')
+def edit_classroom(request, classroom_id):
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+
+    user = request.user
+
+    # Vérifiez si l'utilisateur a le rôle requis pour éditer une salle de classe
+    if user.role not in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
+        raise PermissionDenied
+
+    # Vérifiez si l'utilisateur appartient à l'école de la salle de classe
+    if classroom.school.user != user and not Employee.objects.filter(user=user, service=classroom.school).exists():
+        raise PermissionDenied
 
     if request.method == 'POST':
-        # Récupérer l'ID de la nouvelle école à partir du formulaire
-        new_school_id = request.POST.get('new_school')
-        new_school = get_object_or_404(School, pk=new_school_id)
-
-        # Récupérer l'inscription de l'élève dans l'école actuelle
-        current_enrollment = Enrollment.objects.get(student=student, school=student.school)
-
-        # Créer une nouvelle inscription pour la nouvelle école
-        new_enrollment = Enrollment.objects.create(
-            student=student,
-            school=new_school,
-            last_school=student.school,  # Garder une trace de l'école précédente
-            last_study_class=current_enrollment.study_class,
-            study_class=current_enrollment.study_class,  # Peut être modifié si nécessaire
-            date_enrollment=date.today()  # Date d'inscription à la nouvelle école
-        )
-
-        # Mettre à jour l'inscription de l'élève dans l'école actuelle
-        current_enrollment.delete()
-
-        # Rediriger vers la page de détails de l'élève
-        return redirect('detail_student', student_id=student.id)
-
+        classroom_form = ClassroomForm(request.POST, instance=classroom)
+        if classroom_form.is_valid():
+            classroom_form.save()
+            return redirect('manage_classroom')
     else:
-        # Récupérer toutes les écoles disponibles (sauf l'école actuelle de l'élève)
-        available_schools = School.objects.exclude(pk=student.school.pk)
+        classroom_form = ClassroomForm(instance=classroom)
 
-    return render(request, 'service/admin/student/transfer_student.html',
-                  {'student': student, 'available_schools': available_schools})
+    return render(request, 'core/school/classroom/edit_classroom.html', {
+        'classroom_form': classroom_form,
+        'classroom': classroom
+    })
+
+
+@login_required(login_url='login')
+def delete_classroom(request, classroom_id):
+    classroom = get_object_or_404(Classroom, id=classroom_id)
+
+    user = request.user
+
+    # Vérifiez si l'utilisateur a le rôle requis pour supprimer une salle de classe
+    if user.role not in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
+        raise PermissionDenied
+
+    # Vérifiez si l'utilisateur appartient à l'école de la salle de classe
+    if classroom.school.user != user and not Employee.objects.filter(user=user, service=classroom.school).exists():
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        classroom.delete()
+        return redirect('manage_classroom')
+
+    return render(request, 'core/school/classroom/delete_classroom.html', {
+        'classroom': classroom
+    })

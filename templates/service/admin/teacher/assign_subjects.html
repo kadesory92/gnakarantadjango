@@ -1,0 +1,14 @@
+<!-- templates/service/admin/teacher/assign_subjects.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Attribuer des matières à {{ teacher.firstname }} {{ teacher.lastname }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ teaching_form.as_p }}
+    <button type="submit">Attribuer</button>
+</form>
+
+<p><a href="{% url 'teacher_list' %}">Retour à la liste des enseignants</a></p>
+{% endblock %}

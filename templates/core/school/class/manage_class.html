@@ -1,0 +1,56 @@
+<!-- templates/core/school/study_class/manage_class.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Gérer les classes</h2>
+
+<form method="get">
+    <input type="text" name="search" value="{{ search_query }}" placeholder="Rechercher par nom ou désignation">
+    <button type="submit">Rechercher</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Désignation</th>
+            <th>Option</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for study_class in study_classes_page %}
+        <tr>
+            <td>{{ study_class.name }}</td>
+            <td>{{ study_class.designation }}</td>
+            <td>{{ study_class.get_option_display }}</td>
+            <td>
+                <a href="{% url 'detail_class' study_class.id %}">Détails</a>
+                <a href="{% url 'edit_class' study_class.id %}">Éditer</a>
+                <a href="{% url 'delete_class' study_class.id %}">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if study_classes_page.has_previous %}
+            <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; Première</a>
+            <a href="?page={{ study_classes_page.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Précédente</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ study_classes_page.number }} sur {{ study_classes_page.paginator.num_pages }}.
+        </span>
+
+        {% if study_classes_page.has_next %}
+            <a href="?page={{ study_classes_page.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Suivante</a>
+            <a href="?page={{ study_classes_page.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Dernière &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<a href="{% url 'create_class' %}">Ajouter une classe</a>
+{% endblock %}

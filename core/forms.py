@@ -85,6 +85,12 @@ class TeachingForm(forms.ModelForm):
             'total_hours': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
+        # def __init__(self, *args, **kwargs):
+        #     teacher_id = kwargs.pop('teacher_id', None)
+        #     super().__init__(*args, **kwargs)
+        #     if teacher_id:
+        #         self.fields['subject'].queryset = Subject.objects.filter(teaching__teacher_id=teacher_id)
+
 
 class StudyClassForm(forms.ModelForm):
     class Meta:

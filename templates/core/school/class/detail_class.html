@@ -1,0 +1,14 @@
+<!-- templates/core/school/study_class/detail_class.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Détails de la classe</h2>
+
+<p><strong>Nom :</strong> {{ study_class.name }}</p>
+<p><strong>Désignation :</strong> {{ study_class.designation }}</p>
+<p><strong>Option :</strong> {{ study_class.get_option_display }}</p>
+
+<a href="{% url 'manage_class' %}">Retour à la gestion des classes</a>
+<a href="{% url 'edit_class' study_class.id %}">Éditer</a>
+<a href="{% url 'delete_class' study_class.id %}">Supprimer</a>
+{% endblock %}

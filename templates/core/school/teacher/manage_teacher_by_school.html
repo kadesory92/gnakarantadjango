@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Gérer les enseignants de {{ school.name }}</h2>
+
+<form method="get">
+    <input type="text" name="q" value="{{ query }}" placeholder="Rechercher par nom ou prénom">
+    <button type="submit">Rechercher</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Date de naissance</th>
+            <th>Genre</th>
+            <th>Téléphone</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for teacher in teachers_page %}
+        <tr>
+            <td>{{ teacher.lastname }}</td>
+            <td>{{ teacher.firstname }}</td>
+            <td>{{ teacher.date_of_birth }}</td>
+            <td>{{ teacher.get_gender_display }}</td>
+            <td>{{ teacher.phone }}</td>
+            <td>{{ teacher.get_status_display }}</td>
+            <td>
+                <!-- Ajoutez ici les liens vers les actions supplémentaires si nécessaire -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if teachers_page.has_previous %}
+            <a href="?page=1{% if query %}&q={{ query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">&laquo; Première</a>
+            <a href="?page={{ teachers_page.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Précédente</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ teachers_page.number }} sur {{ teachers_page.paginator.num_pages }}.
+        </span>
+
+        {% if teachers_page.has_next %}
+            <a href="?page={{ teachers_page.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Suivante</a>
+            <a href="?page={{ teachers_page.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}{% if gender_filter %}&gender={{ gender_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Dernière &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
