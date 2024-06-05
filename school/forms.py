@@ -10,6 +10,20 @@ class SchoolForm(forms.ModelForm):
             'founder', 'direction', 'ire', 'name', 'category',
             'level', 'phone', 'address_email', 'site_web', 'image'
         ]
+
+        labels = {
+            'founder': 'Fondateur',
+            'direction': 'Direction',
+            'ire': 'Inspection Régionale',
+            'name': 'Nom de l\'école',
+            'category': 'Catégorie',
+            'level': 'Niveau',
+            'phone': 'Téléphone',
+            'address_email': 'Adresse Email',
+            'site_web': 'Site Web',
+            'image': 'Image'
+        }
+
         widgets = {
             # 'user': forms.HiddenInput(),
             'founder': forms.Select(attrs={'class': 'form-control'}),
@@ -17,7 +31,7 @@ class SchoolForm(forms.ModelForm):
             'ire': forms.Select(attrs={'class': 'form-control'}),
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             # 'type': forms.Select(attrs={'class': 'form-control'}),
-            'category': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
             'level': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address_email': forms.EmailInput(attrs={'class': 'form-control'}),

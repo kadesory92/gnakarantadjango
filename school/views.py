@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 from account.decorators import role_required
 from account.forms import FounderForm, UserForm
-from core.models import Student
+from core.models import Student, Teacher, SchoolTeacher
 from school.forms import SchoolForm, LocalForm
 from school.models import Founder, Local, School, Staff
 
@@ -16,7 +17,6 @@ from school.models import Founder, Local, School, Staff
 @role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE', 'FOUNDER'])
 def create_school(request):
     user = request.user
-
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         school_form = SchoolForm(request.POST, request.FILES)
@@ -31,6 +31,7 @@ def create_school(request):
                 school.founder = None
 
             user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
             user.save()
 
             school.user = user
@@ -94,6 +95,74 @@ def detail_school(request, id):
             'error_message': "School don't exist !"
         })
     return render(request, 'school/admin_school/detail_school.html', {'school': school})
+
+
+def details_school(request, id):
+    try:
+        school = get_object_or_404(School, pk=id)
+        staffs = Staff.objects.filter(school=school)
+        students = Student.objects.filter(school=school)
+        school_teachers = SchoolTeacher.objects.filter(school=school)
+        teachers = Teacher.objects.filter(id__in=school_teachers.values_list('teacher_id', flat=True))
+
+        staff_query = request.GET.get('q')
+        student_query = request.GET.get('p')
+        teacher_query = request.GET.get('t')
+
+        if staff_query:
+            staffs = staffs.filter(
+                Q(lastname__icontains=staff_query) |
+                Q(firstname__icontains=staff_query) |
+                Q(position__icontains=staff_query) |
+                Q(status__icontains=staff_query)
+            )
+
+        if student_query:
+            students = students.filter(
+                Q(firstname__icontains=student_query) |
+                Q(lastname__icontains=student_query) |
+                Q(phone__icontains=student_query) |
+                Q(address__icontains=student_query)
+            )
+
+        if teacher_query:
+            teachers = teachers.filter(
+                Q(lastname__icontains=teacher_query) |
+                Q(firstname__icontains=teacher_query) |
+                Q(phone__icontains=teacher_query) |
+                Q(email__icontains=teacher_query)
+            )
+
+        # Pagination for school staffs
+        paginator_staffs = Paginator(staffs, 5)  # 5 staffs per page
+        page_number_staffs = request.GET.get('page_staffs')
+        page_staffs = paginator_staffs.get_page(page_number_staffs)
+
+        # Pagination for students
+        paginator_students = Paginator(students, 10)  # 10 students per page
+        page_number_students = request.GET.get('page_students')
+        page_students = paginator_students.get_page(page_number_students)
+
+        # Pagination for teachers
+        paginator_teachers = Paginator(teachers, 5)  # 5 teachers per page
+        page_number_teachers = request.GET.get('page_teachers')
+        page_teachers = paginator_teachers.get_page(page_number_teachers)
+
+        context = {
+            'school': school,
+            'staffs': page_staffs,
+            'students': page_students,
+            'teachers': page_teachers,
+            'staff_query': staff_query,
+            'student_query': student_query,
+            'teacher_query': teacher_query
+        }
+    except Http404:
+        return render(request, 'service/admin/school/details_school.html', {
+            'error_message': "School doesn't exist!"
+        })
+
+    return render(request, 'service/admin/school/details_school.html', context)
 
 
 def delete_school(request, id):

@@ -51,7 +51,7 @@ def create_subject(request):
         subject_form = SubjectForm(request.POST)
         if subject_form.is_valid():
             subject_form.save()
-            return redirect('subject_list')
+            return redirect('list_subject')
     else:
         subject_form = SubjectForm()
     return render(request, 'service/admin/subject/create_subject.html', {'subject_form': subject_form})

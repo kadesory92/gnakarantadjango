@@ -1,0 +1,226 @@
+{% extends 'service/layout.html' %}
+
+{% block title %} School {% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row" style="border: solid 1px; margin-top:150px;">
+        <div class="col">
+            <div class="card" style="margin-top:30px;">
+                <div class="d-flex justify-content-between card-header">Info school : {{ school.name }}</div>
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-6 info_school">
+                            <h5 class="card-title">Type: {{ school.type }}</h5>
+                            <p ><strong>Category:</strong> {{ school.category }}</p>
+                            <p ><strong>Level:</strong> {{ school.level }}</p>
+                            <p ><strong>Phone:</strong> {{ school.phone }}</p>
+                            <p ><strong>Email:</strong> {{ school.address_email }}</p>
+                            <p ><strong>Website:</strong> <a href="{{ school.site_web }}">{{ school.site_web }}</a></p>
+                        </div>
+
+                        <div class="col-6 image_school">
+                            {% if school.image %}
+                                <img src="{{ school.image.url }}" class="img-fluid" alt="School Image">
+                            {% else %}
+                                <img src="/static/images/image_default.jpeg" class="img-fluid" alt="School Image" style="height:300px; width:100%;">
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="justify-content-center row" style="border: solid 1px #32a1ce;">
+        <div class="col-10">
+            <div class="card" style="margin-top:40px;">
+                <div class="d-flex justify-content-between card-header">
+                    <div class="h4">School Staffs : </div>
+                    <form method="GET">
+                        <input type="text" name="q" value="{{ staff_query }}" placeholder="Search Staff...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Lastname</th>
+                                <th>Firstname</th>
+                                <th>Position</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for staff in staffs %}
+                            <tr>
+                                <td>{{ staff.lastname }}</td>
+                                <td>{{ staff.firstname }}</td>
+                                <td>{{ staff.position }}</td>
+                                <td>{{ staff.user.email }}</td>
+                                <td>{{ staff.phone }}</td>
+                                <td>
+                                    <a href="" class="btn btn-info btn-sm">Show</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if staffs.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page_staffs={{ staffs.previous_page_number }}&q={{ staff_query }}">Previous</a></li>
+                            {% endif %}
+                            <li class="page-item active"><span class="page-link">Page {{ staffs.number }} of {{ staffs.paginator.num_pages }}</span></li>
+                            {% if staffs.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page_staffs={{ staffs.next_page_number }}&q={{ staff_query }}">Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="justify-content-center row" style="border: solid 1px;">
+        <div class="col-6">
+            <div class="card" style="margin-top:40px;">
+                <div class="d-flex justify-content-between card-header">
+                    <div class="h4">Student : </div>
+                    <form method="GET">
+                        <input type="text" name="p" value="{{ student_query }}" placeholder="Search Student...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable3" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Lastname</th>
+                                <th>Firstname</th>
+                                <th>Date of birth</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ student.lastname }}</td>
+                                <td>{{ student.firstname }}</td>
+                                <td>{{ student.date_of_birth }}</td>
+                                <td>
+                                    <a href="" class="btn btn-info btn-sm">Show</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card" style="margin-top:70px;">
+                <div class="d-flex justify-content-between card-header">
+                    <div class="h4">Teachers : </div>
+                    <form method="GET" action="{% url 'details_school' school.id %}">
+                        <input type="text" name="t" value="{{ teacher_query }}" placeholder="Search Teacher...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable4" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Lastname</th>
+                                <th>Firstname</th>
+                                <th>Phone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ teacher.lastname }}</td>
+                                <td>{{ teacher.firstname }}</td>
+                                <td>{{ teacher.phone }}</td>
+                                <td>
+                                    <a href="" class="btn btn-info btn-sm">Show</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                    <!-- Pagination pour les enseignants -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if teachers.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page_teachers=1{% if school_query %}&q={{ school_query }}{% endif %}{% if teacher_query %}&p={{ teacher_query }}{% endif %}" aria-label="Première">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page_teachers={{ teachers.previous_page_number }}{% if school_query %}&q={{ school_query }}{% endif %}{% if teacher_query %}&p={{ teacher_query }}{% endif %}" aria-label="Précédente">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    Page {{ teachers.number }} de {{ teachers.paginator.num_pages }}
+                                </span>
+                            </li>
+
+                            {% if teachers.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page_teachers={{ teachers.next_page_number }}{% if school_query %}&q={{ school_query }}{% endif %}{% if teacher_query %}&p={{ teacher_query }}{% endif %}" aria-label="Suivante">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page_teachers={{ teachers.paginator.num_pages }}{% if school_query %}&q={{ school_query }}{% endif %}{% if teacher_query %}&p={{ teacher_query }}{% endif %}" aria-label="Dernière">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

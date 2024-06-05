@@ -8,9 +8,10 @@ from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
 
-from core.forms import StudentForm, EnrollmentForm
-from core.models import Student, Enrollment
-from school.models import School
+from account.forms import UserForm
+from core.forms import StudentForm, EnrollmentForm, ParentForm
+from core.models import Student, Enrollment, Parent
+from school.models import School, Staff
 from service.models import Employee
 
 
@@ -31,15 +32,19 @@ def manage_student(request):
         school = School.objects.get(user=user)
     else:
         try:
-            employee = Employee.objects.get(user=user)
-            school = employee.service  # Assuming employee is linked to a service, update if necessary
+            staff = Staff.objects.get(user=user)
+            school = staff.school  # Assuming employee is linked to a service, update if necessary
         except Employee.DoesNotExist:
             raise PermissionDenied
 
     # Filtrer les étudiants par l'école et par les critères de recherche
     students = Student.objects.filter(school=school).order_by('last_name')
     if search_query:
-        students = students.filter(Q(first_name__icontains=search_query) | Q(last_name__icontains=search_query))
+        students = students.filter(
+            Q(first_name__icontains=search_query)
+            | Q(last_name__icontains=search_query)
+            | Q(phone__icontains=search_query)
+        )
     if filter_criteria:
         students = students.filter(study_class_id=filter_criteria)
 
@@ -72,26 +77,41 @@ def create_student(request):
         if user.role == 'SCHOOL':
             school = School.objects.get(user=user)
         else:
-            employee = Employee.objects.get(user=user)
-            school = employee.service  # Assuming employee is linked to a service, update if necessary
+            staff = Staff.objects.get(user=user)
+            school = staff.school  # Assuming employee is linked to a service, update if necessary
 
         if request.method == 'POST':
+            user_form = UserForm(request.POST)
             student_form = StudentForm(request.POST, request.FILES)
 
-            if student_form.is_valid():
+            if student_form.is_valid() and user_form.is_valid():
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password'])
+
+                user.save()
+
                 student = student_form.save(commit=False)
+                student.user = user
                 student.school = school
                 student.save()
 
-                # Stocker l'ID de l'étudiant dans la session pour le récupérer dans la vue suivante
-                request.session['student_id'] = student.id
+                # Stocker l'ID de l'école dans la session pour le récupérer après
+                # request.session['school_id'] = school.id
 
-                return redirect('create_parent')  # Rediriger vers le formulaire d'enregistrement de parent
+                # Stocker l'ID de l'étudiant dans la session pour le récupérer dans la vue suivante
+                # request.session['student_id'] = student.id
+
+                # Stocker l'ID de l'élève dans une variable à transmettre à la page suivante
+
+                student_id = student.id
+                return redirect('create_parent', student_id)  # Rediriger vers le formulaire d'enregistrement de parent
 
         else:
+            user_form = UserForm()
             student_form = StudentForm()
 
         context = {
+            'user_form': user_form,
             'student_form': student_form,
         }
 
@@ -179,45 +199,6 @@ def delete_student(request, student_id):
         raise Http404("Student does not exist")
 
 
-@login_required(login_url='login')
-def enroll_student(request):
-    student_id = request.session.get('student_id')
-
-    if not student_id:
-        return redirect(
-            'create_student')  # Rediriger vers la création de l'étudiant si l'ID de l'étudiant n'est pas trouvé
-
-    try:
-        student = Student.objects.get(id=student_id)
-    except Student.DoesNotExist:
-        return redirect('create_student')  # Rediriger vers la création de l'étudiant si l'étudiant n'est pas trouvé
-
-    if request.method == 'POST':
-        enrollment_form = EnrollmentForm(request.POST)
-
-        if enrollment_form.is_valid():
-            enrollment = enrollment_form.save(commit=False)
-            enrollment.student = student
-            enrollment.school = student.school
-            enrollment.date_enrollment = timezone.now()
-            enrollment.save()
-
-            # Nettoyer l'ID de l'étudiant de la session après l'inscription
-            del request.session['student_id']
-
-            return redirect('service_dashboard')  # Rediriger vers le tableau de bord après l'inscription
-
-    else:
-        enrollment_form = EnrollmentForm()
-
-    context = {
-        'enrollment_form': enrollment_form,
-        'student': student,
-    }
-
-    return render(request, 'core/school/enroll_student.html', context)
-
-
 @login_required
 def transfer_student(request, student_id):
     # Récupérer l'élève à transférer
@@ -253,3 +234,94 @@ def transfer_student(request, student_id):
 
     return render(request, 'service/admin/student/transfer_student.html',
                   {'student': student, 'available_schools': available_schools})
+
+
+def create_parent(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        parent_form = ParentForm(request.POST, request.FILES)
+        if user_form.is_valid() and parent_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+
+            parent = parent_form.save(commit=False)
+            parent.user = user
+            parent.save()
+
+            # request.session['parent_id'] = parent.id
+
+            return redirect('create_parenting', student_id=student.id, parent_id=parent.id)
+
+    else:
+        user_form = UserForm()
+        parent_form = ParentForm()
+
+    context = {
+        'user_form': user_form,
+        'parent_form': parent_form
+    }
+
+    return render(request, 'core/school/parent/create_parent.html', context)
+
+
+def create_parenting(request, student_id, parent_id):
+    student = get_object_or_404(Student, id=student_id)
+    parent = get_object_or_404(Parent, id=parent_id)
+    if request.method == 'POST':
+        parenting_form = ParentForm(request.POST)
+
+        if parenting_form.is_valid():
+            parenting = parenting_form.save()
+
+            parenting.save()
+
+            return redirect('school_dashboard')
+        # student_id = student.id
+    else:
+        parenting_form = ParentForm(initial={'student': student, 'parent': parent})
+
+    return render(request, 'core/school/parent/create_parenting.html', {'parenting_form': parenting_form})
+
+
+@login_required(login_url='login')
+def enroll_student(request, student_id):
+    # school = get_object_or_404(School, id=request.session.get('school_id'))
+    # student_id = request.session.get('student_id')
+    if not student_id:
+        return redirect(
+            'create_student')  # Rediriger vers la création de l'étudiant si l'ID de l'étudiant n'est pas trouvé
+
+    # if not school:
+    #     return redirect('create_student')
+
+    try:
+        student = Student.objects.get(id=student_id)
+    except Student.DoesNotExist:
+        return redirect('create_student')  # Rediriger vers la création de l'étudiant si l'étudiant n'est pas trouvé
+
+    if request.method == 'POST':
+        enrollment_form = EnrollmentForm(request.POST)
+
+        if enrollment_form.is_valid():
+            enrollment = enrollment_form.save(commit=False)
+            enrollment.student = student
+            enrollment.school = student.school
+            enrollment.date_enrollment = timezone.now()
+            enrollment.save()
+
+            # Nettoyer l'ID de l'étudiant de la session après l'inscription
+            del request.session['student_id']
+
+            return redirect('service_dashboard')  # Rediriger vers le tableau de bord après l'inscription
+
+    else:
+        enrollment_form = EnrollmentForm()
+
+    context = {
+        'enrollment_form': enrollment_form,
+        'student': student,
+    }
+
+    return render(request, 'core/school/enroll_student.html', context)

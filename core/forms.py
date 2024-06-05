@@ -1,44 +1,14 @@
 from django import forms
-from .models import Student, Enrollment, Teacher, SchoolTeacher, Subject, Teaching, StudyClass, Classroom, Course, Parent, Parenting, Exam, Attendance, Program
-
-
-class StudentForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        exclude = ['user']
-        fields = ['lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'birth_certificate', 'document', 'photo', 'school']
-        widgets = {
-            'lastname': forms.TextInput(attrs={'class': 'form-control'}),
-            'firstname': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'gender': forms.Select(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'birth_certificate': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'document': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'school': forms.Select(attrs={'class': 'form-control'}),
-        }
-
-
-class EnrollmentForm(forms.ModelForm):
-    class Meta:
-        model = Enrollment
-        fields = ['student', 'school', 'last_school', 'last_study_class', 'study_class', 'date_enrollment']
-        widgets = {
-            'student': forms.Select(attrs={'class': 'form-control'}),
-            'school': forms.Select(attrs={'class': 'form-control'}),
-            'last_school': forms.Select(attrs={'class': 'form-control'}),
-            'last_study_class': forms.Select(attrs={'class': 'form-control'}),
-            'study_class': forms.Select(attrs={'class': 'form-control'}),
-            'date_enrollment': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-        }
+from .models import Student, Enrollment, Teacher, SchoolTeacher, Subject, Teaching, StudyClass, Classroom, Course, \
+    Parent, Parenting, Exam, Attendance, Program, StudentExam
 
 
 class TeacherForm(forms.ModelForm):
     class Meta:
         exclude = ['user']
         model = Teacher
-        fields = ['user', 'direction', 'lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'status', 'form_level', 'certificate', 'address', 'photo']
+        fields = ['user', 'direction', 'lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'status',
+                  'form_level', 'certificate', 'address', 'photo']
         widgets = {
             'direction': forms.Select(attrs={'class': 'form-control'}),
             'lastname': forms.TextInput(attrs={'class': 'form-control'}),
@@ -68,10 +38,9 @@ class SchoolTeacherForm(forms.ModelForm):
 class SubjectForm(forms.ModelForm):
     class Meta:
         model = Subject
-        fields = ['name', 'coefficient']
+        fields = ['name']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'coefficient': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -116,7 +85,8 @@ class ClassroomForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['date_course', 'start_time', 'end_time', 'teacher', 'subject', 'study_class', 'classroom']
+        fields = ['date_course', 'start_time', 'end_time', 'teacher', 'subject',
+                  'study_class', 'classroom', 'coefficient']
         widgets = {
             'date_course': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'start_time': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
@@ -125,6 +95,26 @@ class CourseForm(forms.ModelForm):
             'subject': forms.Select(attrs={'class': 'form-control'}),
             'study_class': forms.Select(attrs={'class': 'form-control'}),
             'classroom': forms.Select(attrs={'class': 'form-control'}),
+            'coefficient': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        exclude = ['user']
+        fields = ['lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'birth_certificate', 'document', 'photo',
+                  'school']
+        widgets = {
+            'lastname': forms.TextInput(attrs={'class': 'form-control'}),
+            'firstname': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'birth_certificate': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'document': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'school': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -163,22 +153,25 @@ class ParentingForm(forms.ModelForm):
         }
 
 
-# class ParentingForm(forms.ModelForm):
-#     class Meta:
-#         model = Parenting
-#         fields = ['family_bond', 'tutor']
-#         widgets = {
-#             'family_bond': forms.Select(attrs={'class': 'form-control'}),
-#             'tutor': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-#         }
-#
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ['student', 'school', 'last_school', 'last_study_class', 'study_class', 'date_enrollment']
+        widgets = {
+            'student': forms.Select(attrs={'class': 'form-control'}),
+            'school': forms.Select(attrs={'class': 'form-control'}),
+            'last_school': forms.Select(attrs={'class': 'form-control'}),
+            'last_study_class': forms.Select(attrs={'class': 'form-control'}),
+            'study_class': forms.Select(attrs={'class': 'form-control'}),
+            'date_enrollment': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
 
 
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
         fields = ['designation', 'type_exam', 'date_exam',
-                  'coefficient', 'subject', 'students'
+                  'coefficient', 'subject',
                   ]
         widgets = {
             'designation': forms.TextInput(attrs={'class': 'form-control'}),
@@ -186,7 +179,24 @@ class ExamForm(forms.ModelForm):
             'date_exam': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'coefficient': forms.NumberInput(attrs={'class': 'form-control'}),
             'subject': forms.Select(attrs={'class': 'form-control'}),
-            'students': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            # 'students': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }
+
+
+# class ExamForm(forms.ModelForm):
+#     class Meta:
+#         model = Exam
+#         fields = ['name', 'date', 'subject', 'type_exam', 'coefficient']
+
+class StudentExamForm(forms.ModelForm):
+    class Meta:
+        model = StudentExam
+        fields = ['student', 'exam', 'grade']
+
+        widgets = {
+            'student': forms.Select(attrs={'class': 'form-control'}),
+            'exam': forms.Select(attrs={'class': 'form-control'}),
+            'grade': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 

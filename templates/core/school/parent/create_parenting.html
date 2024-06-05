@@ -10,25 +10,17 @@
             <div class="col-md-10">
 
                 <div class="card" style="margin-top:0px;">
-                    <div class="card-header"><h4>Student Inscription</h4></div>
+                    <div class="card-header"><h4>Associate Student to Parent</h4></div>
                     <div class="card-body">
 
                         <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                             <div class="row">
-                                <div class="col-6">
-                                    <div class="card">
-                                        <div class="card-header">User Information</div>
-                                        <div class="card-body">
-                                            {{ user_form.as_p }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
+                                <div class="col">
                                     <div class="card">
                                         <div class="card-header">Profile Information</div>
                                         <div class="card-body">
-                                            {{ student_form.as_p }}
+                                            {{ parenting_form.as_p }}
                                         </div>
                                     </div>
                                 </div>

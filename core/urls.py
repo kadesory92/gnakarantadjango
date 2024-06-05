@@ -9,10 +9,12 @@ urlpatterns = [
 
     path('school/student/manage_student', views_student.manage_student, name='manage_student'),
     path('school/student/create_student', views_student.create_student, name='create_student'),
-    path('school/student/detail_student/<int:id>', views_student.detail_student, name='detail_student'),
-    path('school/student/edit_student/<int:id>', views_student.edit_student, name='edit_student'),
-    path('school/student/delete_student/<int:id>', views_student.delete_student, name='delete_student'),
-    path('school/student/enrollment', views_student.enroll_student, name='enrollment_student'),
+    path('school/student/detail_student/<int:id>/', views_student.detail_student, name='detail_student'),
+    path('school/student/edit_student/<int:id>/', views_student.edit_student, name='edit_student'),
+    path('school/student/delete_student/<int:id>/', views_student.delete_student, name='delete_student'),
+    path('school/parent/create_parent/<int:student_id>/', views_student.create_parent, name='create_parent'),
+    path('school/student/parent/create_parenting/<int:student_id>/<int:parent_id>/', views_student.create_parenting, name='create_parenting'),
+    path('school/student/enrollment/<int:student_id>/', views_student.enroll_student, name='enrollment_student'),
 
     path('service/teacher/manage_teacher_by_direction/', views_teacher.manage_teacher_by_direction, name='teacher_by_direction'),
     path('school/teacher/manage_teacher_by_school', views_teacher.manage_teacher_by_school, name='manage_teacher'),

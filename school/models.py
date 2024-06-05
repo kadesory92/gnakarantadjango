@@ -28,6 +28,16 @@ class Founder(models.Model):
 
 class School(models.Model):
     objects = None
+    IRE = [
+        ('ire_boke', 'IRE BOKE'),
+        ('ire_conakry', 'Conakry'),
+        ('ire_faranah', 'IRE FARANAH'),
+        ('ire_kankan', 'IRE KANKAN'),
+        ('ire_kindia', 'IRE KINDIA'),
+        ('ire_labe', 'IRE LABE'),
+        ('ire_mamou', 'IRE MAMOU'),
+        ('ire_nzerekore', 'IRE N\'ZEREKORE')
+    ]
     CATEGORY = [
         ('primary_education', 'Enseignement primaire'),
         ('secondary_education', 'Enseignement Seconaire')
@@ -48,8 +58,7 @@ class School(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     founder = models.ForeignKey(Founder, on_delete=models.SET_NULL, null=True, blank=True)
     direction = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='direction_of_education')
-    ire = models.ForeignKey(Service, on_delete=models.CASCADE, blank=True, null=True,
-                            related_name='inspection_regional')
+    ire = models.ForeignKey(Service, choices=IRE, on_delete=models.CASCADE, related_name='inspection_regional')
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=200, choices=TYPE_SCHOOL)
     category = models.CharField(max_length=200, choices=CATEGORY)

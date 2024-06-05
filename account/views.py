@@ -54,6 +54,9 @@ def admin_dashboard(request):
     if type_query:
         schools = schools.filter(type__icontains=type_query)
 
+    # Add ordering to ensure consistent pagination
+    schools = schools.order_by('name')  # Remplacez 'name' par le champ approprié
+
     # Pagination
     paginator = Paginator(schools, 10)  # Show 10 services per page
     page = request.GET.get('page')

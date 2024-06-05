@@ -30,13 +30,12 @@ class Teacher(models.Model):
     address = models.TextField(max_length=200)
     photo = models.ImageField(upload_to='teachers/photos', blank=True, null=True)
 
-    # schools = models.ManyToManyField(School)
-
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
 
 
 class SchoolTeacher(models.Model):
+    objects = None
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     date_of_commitment = models.DateField()
@@ -47,8 +46,7 @@ class SchoolTeacher(models.Model):
 
 class Subject(models.Model):
     objects = None
-    name = models.CharField(max_length=200)
-    coefficient = models.IntegerField()
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
@@ -96,6 +94,7 @@ class Course(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     study_class = models.ForeignKey(StudyClass, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
+    coefficient = models.IntegerField()
 
     def __str__(self):
         return f"{self.subject.name} - {self.date_course}"
@@ -201,20 +200,19 @@ class Exam(models.Model):
     coefficient = models.IntegerField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     # type_exam = models.ForeignKey(TypeExam, on_delete=models.CASCADE)
-    students = models.ManyToManyField(Student)
+    # students = models.ManyToManyField(Student, related_name='exams')
 
     def __str__(self):
         return f"{self.designation} - {self.date_exam}"
 
 
-# class TakeExam(models.Model):
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-#     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-#     present = models.BooleanField()
-#     mark = models.FloatField()
-#
-#     def __str__(self):
-#         return f"{self.student.firstname} {self.student.lastname} - {self.exam.designation}"
+class StudentExam(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    grade = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.student} - {self.exam} - {self.grade}'
 
 
 class Attendance(models.Model):
