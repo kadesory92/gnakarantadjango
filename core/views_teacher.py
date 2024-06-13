@@ -1,14 +1,15 @@
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 
-from account.decorators import role_required, has_role
+from account.decorators_middleware import role_required, has_role, required_role
 from account.forms import UserForm
 from core.forms import TeacherForm, TeachingForm, SchoolTeacherForm
 from core.models import Teacher, SchoolTeacher
-from school.models import School
+from school.models import School, Staff, Founder
 from service.models import Employee, Service
 
 
@@ -161,7 +162,6 @@ def register_teacher(request):
         'teacher_form': teacher_form
     })
 
-
 @role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE'])
 def assign_subjects(request, teacher_id):
     teacher = get_object_or_404(Teacher, id=teacher_id)
@@ -187,7 +187,7 @@ def detail_teacher(request):
     return render(request, 'core/school/teacher/edit_teacher.html')
 
 
-@login_required
+@login_required(login_url='login')
 def edit_teacher(request, pk):
     if not has_role(request.user, ['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE']):
         return redirect('home')
@@ -215,7 +215,7 @@ def delete_teacher(request, pk):
 
 
 @login_required(login_url='login')
-@role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE', 'SCHOOL'])
+@required_role(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE', 'SCHOOL'])
 def assign_teacher(request):
     if request.method == 'POST':
         form = SchoolTeacherForm(request.POST)
@@ -224,14 +224,43 @@ def assign_teacher(request):
             return redirect('manage_teacher', school_id=form.cleaned_data['school'].id)
     else:
         form = SchoolTeacherForm()
-    return render(request, 'assign_teacher.html', {'form': form})
+    return render(request, 'service/admin/teacher/assign_teacher.html', {'form': form})
 
 
 @login_required(login_url='login')
-@role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE', 'SCHOOL'])
+@required_role(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE', 'SCHOOL'])
 def un_assign_teacher(request, school_teacher_id):
     school_teacher = get_object_or_404(SchoolTeacher, id=school_teacher_id)
     if request.method == 'POST':
         school_teacher.delete()
         return redirect('manage_teacher', school_id=school_teacher.school.id)
-    return render(request, 'un_assign_teacher.html', {'school_teacher': school_teacher})
+    return render(request, 'service/admin/teacher/un_assign_teacher.html', {'school_teacher': school_teacher})
+
+
+@login_required(login_url='login')
+@required_role(['SCHOOL', 'FOUNDER', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER'])
+def recruit_teacher(request, teacher_id):
+    user = request.user
+
+    if user.role in ['SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
+        staff = get_object_or_404(Staff, user=user)
+        school = staff.school
+    elif user.role == 'FOUNDER':
+        founder = get_object_or_404(Founder, user=user)
+        school = get_object_or_404(School, founder=founder)
+    else:
+        school = get_object_or_404(School, user=user)
+
+    teacher = get_object_or_404(Teacher, id=teacher_id)
+    if request.methode == 'POST':
+        schoolTeacher_form = SchoolTeacherForm(request.POST)
+        schoolTeacher = schoolTeacher_form.save(commit=False)
+        schoolTeacher.school = school
+        schoolTeacher.teacher = teacher
+
+        teacher.save()
+
+    else:
+        schoolTeacher_form = SchoolTeacherForm()
+
+    return render(request, 'service/admin/teacher/recruit_teacher.html', {'schoolTeacher_form': schoolTeacher_form})

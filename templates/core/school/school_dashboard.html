@@ -1,0 +1,152 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="justify-content-center row mt-4" id="newStudent">
+
+          <div class="col-md-12">
+              <div class="card mb-3">
+                  <div class="card-header">
+                      <h4>School Dashboard</h4>
+                  </div>
+                  <div class="card-body">
+                      <!-- Statistics -->
+                    <div class="row">
+                      <!-- Student statistics -->
+                      <div class="col-md-3">
+                        <div class="card">
+                          <div class="card-header">
+                            <h5 class="card-title">Student Statistics</h5>
+                          </div>
+                          <div class="card-body">
+                            <p>Total Students : {{ student_numbers }}</p>
+                            <p>Total girls : </p>
+                            <!-- Add more dynamic student statistics here -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Statistics on teachers -->
+                      <div class="col-md-3">
+                        <div class="card">
+                          <div class="card-header">
+                            <h5 class="card-title">Teacher Statistics</h5>
+                          </div>
+                          <div class="card-body">
+                            <p>Total Teachers : {{ teacher_numbers }}</p>
+                            <p>Private teachers : </p>
+                            <!-- Add more dynamic statistics on teachers here -->
+                          </div>
+                        </div>
+                      </div>
+                        <!-- Statistics on staffs -->
+                      <div class="col-md-2">
+                        <div class="card">
+                          <div class="card-header">
+                            <h5 class="card-title">Staff Statistics</h5>
+                          </div>
+                          <div class="card-body text-center">
+                            <p>Total Staffs </p>
+                            <p>{{ staff_numbers }}</p>
+                            <!-- Add more dynamic statistics on teachers here -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Attendance statistics -->
+                      <div class="col-md-4">
+                        <div class="card">
+                          <div class="card-header">
+                            <h5 class="card-title">Attendance Statistics</h5>
+                          </div>
+                          <div class="card-body">
+                            <p>Percentage of student attendance : {{ present_percentage }} %</p>
+                            <p>Percentage of student absence : {{ absent_percentage }} %</p>
+                            <!-- Add other dynamic attendance statistics here -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+
+              <div class="card">
+                  <div class="d-flex justify-content-between card-header">
+                      <h4>Liste des élèves</h4>
+                      <form method="GET" action="{% url 'school_dashboard' %}" class="form-inline my-2 my-lg-0">
+                          <input class="mr-2" placeholder="Search" aria-label="Search" name="q" value="{{ query }}">
+                          <button type="submit">Rechercher</button>
+                      </form>
+                  </div>
+                  <div class="card-body">
+                      <table class="table table-bordered mt-3">
+                          <thead>
+                                <tr>
+                                    <th>Lastname</th>
+                                    <th>Firstname</th>
+                                    <th>Date Of Birth</th>
+                                    <th>Gender</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                          <tbody>
+                              {% for student in students %}
+                              <tr>
+                                  <td>{{ student.lastname }}</td>
+                                  <td>{{ student.firstname }}</td>
+                                  <td>{{ student.date_of_birth }}</td>
+                                  <td>{{ student.phone }}</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                  </div>
+                  <div class="card-footer">
+                      <nav aria-label="Page navigation">
+                          <ul class="pagination">
+                                {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1&q={{ query }}" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                    {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ num }}&q={{ query }}">{{ num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                      </nav>
+                  </div>
+              </div>
+
+          </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
-from account.decorators import role_required
+from account.decorators_middleware import role_required
 from account.forms import FounderForm, UserForm
 from core.models import Student, Teacher, SchoolTeacher
 from school.forms import SchoolForm, LocalForm
@@ -46,7 +46,7 @@ def create_school(request):
 
 
 def list_schools(request):
-    schools = School.objects.all()
+    schools = School.objects.all().order_by('name')
 
     # Filtering
     query = request.GET.get('q')

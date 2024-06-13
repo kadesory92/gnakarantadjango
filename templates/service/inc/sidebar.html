@@ -60,6 +60,21 @@
           </li>
 
           <li class="nav-item">
+            <a class="nav-link dropdown-toggle" href="#classesSubmenu" data-bs-toggle="collapse" aria-expanded="false">
+              <i class="fas fa-chalkboard-teacher me-2"></i>
+              Class
+            </a>
+            <ul class="collapse nav flex-column ms-3" id="classesSubmenu">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'create_class' %}">Add Class</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'manage_class' %}">Manage Class</a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
             <a class="nav-link dropdown-toggle" href="#subjectsSubmenu" data-bs-toggle="collapse" aria-expanded="false">
               <i class="fas fa-chalkboard-teacher me-2"></i>
               Subjects

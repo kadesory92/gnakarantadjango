@@ -1,0 +1,83 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="mt-3 mb-2 my-3">Detail Student</h4>
+        <div class="justify-content-center row mt-4" id="newStudent">
+
+            <div class="col-md-4">
+
+                <div class="card mb-4">
+
+                    <div class="d-flex justify-content-between card-header">User Profile</div>
+
+                    {% if employee.photo %}
+                        <img class="card-img-top" src="{{student.photo.url}}" alt="Student image"
+                             style="width:30%; margin-left:90px; margin-bottom:-10px; margin-top:20px;">
+                    {% else %}
+                        <img src="/static/images/image_default.jpeg" class="img-fluid" alt="Student Image"
+                             style="width:30%; margin-left:90px; margin-bottom:-10px; margin-top:20px;">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <div class="card-title" style="margin-left:60px;">
+                            <strong>Username : </strong>{{employee.user.username}}
+                        </div>
+                        <div class="card-title"><strong>Email : </strong>{{employee.user.email}}</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="col-md-8">
+
+                <div class="card mb-4">
+
+                    <div class="d-flex justify-content-between card-header">Info Student</div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <ul class="list-group">
+                                    <li class="list-group-item"><strong>Firstname</strong> : {{student.firstname}}</li>
+                                  <li class="list-group-item"><strong>Lastname</strong> : {{student.lastname}}</li>
+                                  <li class="list-group-item"><strong>Date Of Birthday</strong> : {{student.date_of_birth}}</li>
+                                </ul>
+                            </div>
+
+                            <div class="col-4">
+                                <ul class="list-group">
+                                  <li class="list-group-item"><strong>Gender</strong> : {{student.gender}}</li>
+                                  <li class="list-group-item"><strong>Status</strong> : {{employee.status}}</li>
+                                  <li class="list-group-item"><strong>Phone</strong> : {{student.phone}}</li>
+                                </ul>
+                            </div>
+
+                            <div class="col-4">
+                                <ul class="list-group">
+                                  <li class="list-group-item"><strong>School</strong> : {{student.school.name}}</li>
+                                  <li class="list-group-item"><strong>Position</strong> : {{student.position}}</li>
+                                  <li class="list-group-item"><strong>Address</strong> : {{student.address}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

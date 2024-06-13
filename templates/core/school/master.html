@@ -18,7 +18,7 @@
     /* Sidebar */
     .sidebar {
       position: fixed;
-      top: 0;
+      top: -50px;
       bottom: 0;
       left: 0;
       z-index: 100;
@@ -27,6 +27,7 @@
       color: #fff;
       width: 200px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      font-size:18px
     }
 
     .sidebar-heading {
@@ -81,7 +82,7 @@
     <div id="sidebar">
         {% include 'core/school/inc/sidebar.html' %}
     </div>
-    <div class="justify-content-center row" id="content">
+    <div id="content">
         {% block content %}{% endblock %}
     </div>
 

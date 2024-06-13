@@ -1,0 +1,47 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="justify-content-center row mt-4" id="newStudent">
+
+            <div class="col-md-10">
+
+                <div class="card" style="margin-top:0px;">
+                    <div class="card-header"><h4>Staff Inscription</h4></div>
+                    <div class="card-body">
+
+                        <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="card">
+                                        <div class="card-header">User Information</div>
+                                        <div class="card-body">
+                                            {{ user_form.as_p }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card">
+                                        <div class="card-header">Profile Information</div>
+                                        <div class="card-body">
+                                            {{ staff_form.as_p }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit">Inscription</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

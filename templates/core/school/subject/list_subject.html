@@ -1,0 +1,63 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+<div class="content">
+
+        <div class="justify-content-center row mt-4" id="listSubject">
+
+            <div class="col-md-10">
+
+                <div class="card" style="margin-top:50px;">
+                    <div class="d-flex justify-content-between card-header">
+                        <div class="h4">Gérer les Matières</div>
+                        <form method="get" action="{% url 'list_subject' %}">
+                            <input type="text" name="q" value="{{ query }}" placeholder="Rechercher par nom">
+                            <button type="submit">Rechercher</button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subject in subjects_page %}
+                                <tr>
+                                    <td>{{ subject.name }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if subjects_page.has_previous %}
+                                    <a href="?page=1{% if query %}&q={{ query }}{% endif %}">&laquo; Première</a>
+                                    <a href="?page={{ subjects_page.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Précédente</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ subjects_page.number }} sur {{ subjects_page.paginator.num_pages }}.
+                                </span>
+
+                                {% if subjects_page.has_next %}
+                                    <a href="?page={{ subjects_page.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Suivante</a>
+                                    <a href="?page={{ subjects_page.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Dernière &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+</div>
+
+{% endblock %}

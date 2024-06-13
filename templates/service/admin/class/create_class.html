@@ -1,14 +1,33 @@
 <!-- templates/core/school/study_class/create_class.html -->
-{% extends "base.html" %}
+{% extends 'service/layout.html' %}
 
 {% block content %}
-<h2>Ajouter une classe</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ study_class_form.as_p }}
-    <button type="submit">Ajouter</button>
-</form>
+<div class="container mt-5">
 
-<a href="{% url 'manage_class' %}">Retour à la gestion des classes</a>
+    <div class="card" style="margin-top:100px;">
+        <div class="card-header"><h4>Enregistrer une classe</h4></div>
+        <div class="card-body">
+
+            <form method="post">
+            {% csrf_token %}
+                <div class="justify-content-center row">
+                    <div class="col-10">
+                        <div class="card">
+                            <div class="card-header">Info Classe</div>
+                            <div class="card-body">
+                                {{ studyClass_form.as_p }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="submit">Enregistrer</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -62,6 +62,7 @@ class Teaching(models.Model):
 
 
 class StudyClass(models.Model):
+    objects = None
     OPTION = [
         ('general', 'Enseignement général'),
         ('math_sciences', 'Sciences Mathématiques'),
@@ -81,12 +82,15 @@ class Classroom(models.Model):
     objects = None
     name = models.CharField(max_length=200)
     capacity = models.IntegerField()
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
 
 class Course(models.Model):
+    objects = None
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     date_course = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -197,10 +201,7 @@ class Exam(models.Model):
     designation = models.CharField(max_length=200)
     type_exam = models.CharField(max_length=200, choices=TYPE_EXAM)
     date_exam = models.DateField()
-    coefficient = models.IntegerField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    # type_exam = models.ForeignKey(TypeExam, on_delete=models.CASCADE)
-    # students = models.ManyToManyField(Student, related_name='exams')
 
     def __str__(self):
         return f"{self.designation} - {self.date_exam}"
@@ -216,6 +217,7 @@ class StudentExam(models.Model):
 
 
 class Attendance(models.Model):
+    objects = None
     TYPE_CHOICES = [
         ('student', 'Elève'),
         ('teacher', 'Professeur'),

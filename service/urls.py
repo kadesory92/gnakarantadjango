@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import views, views_employee
 
 urlpatterns = [
     path('admin/service/dashboard', views.service_dashboard, name='service_dashboard'),
@@ -26,4 +26,7 @@ urlpatterns = [
     path('admin/employee/assign_employee_to_service/<int:employee_id>/', views.assign_employee_to_service,
          name='assign_employee_to_service'),
 
+    path('service/employee/employees_by_service/', views_employee.list_employee_by_service,
+         name='employees_by_service'),
+    path('service/employee/<int:id>/', views_employee.employee, name='employee'),
 ]

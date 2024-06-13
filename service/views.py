@@ -4,15 +4,13 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db import OperationalError
 from django.db.models import Count, Q
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
-from account.decorators import required_role
 from account.forms import EmployeeForm
 from core.models import Student, Teacher
-from school.models import School, Staff
+from school.models import School
 from .forms import ServiceForm, EmployeeAssignmentForm
 from django.contrib import messages
 

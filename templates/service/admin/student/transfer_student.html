@@ -1,0 +1,33 @@
+{% extends 'service/layout.html' %}
+
+{% block title %}Transfert d'Elève{% endblock %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h4>Transférer l'élève : {{ student.firstname }} {{ student.lastname }}</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="new_school">Nouvelle école</label>
+                    <select class="form-control" id="new_school" name="new_school" required>
+                        <option value="" disabled selected>Choisissez une école</option>
+                        {% for school in available_schools %}
+                            <option value="{{ school.id }}">{{ school.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Transférer</button>
+                <a href="{% url 'detail_student' student.id %}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,5 +1,6 @@
 from functools import wraps
 
+from django.contrib.auth import logout
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 
@@ -11,7 +12,8 @@ def required_role(role):
             if request.user.is_authenticated and request.user.role == role:
                 return view_func(request, *args, **kwargs)
             else:
-                return redirect('login')  # Redirect to login if user doesn't have the required role
+                logout(request)
+                return redirect('login')  # Redirect to log-in if user doesn't have the required role
 
         return wrapped_view
 
@@ -38,4 +40,8 @@ def has_role(user, roles):
 
 
 def is_school_role(user):
+    return user.role in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']
+
+
+def is_school_staff(user):
     return user.role in ['SCHOOL', 'SCHOOL_ADMIN', 'SCHOOL_MANAGER']

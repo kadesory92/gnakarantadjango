@@ -1,14 +1,30 @@
-<!-- templates/core/school/classroom/create_classroom.html -->
-{% extends "base.html" %}
+{% extends 'core/school/master.html' %}
 
 {% block content %}
-<h2>Ajouter une salle de classe</h2>
+<div class="content">
 
-<form method="post">
-    {% csrf_token %}
-    {{ classroom_form.as_p }}
-    <button type="submit">Ajouter</button>
-</form>
+    <div class="justify-content-center row mt-4" id="listSubject">
 
-<a href="{% url 'manage_classroom' %}">Retour à la gestion des salles de classe</a>
+        <div class="col-md-10">
+
+            <div class="card" style="margin-top:0px;">
+                <div class="card-header"><h4>Add Classroom</h4></div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ classroom_form.as_p }}
+
+                        <button type="submit">Save</button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

@@ -144,10 +144,10 @@ class ParentForm(forms.ModelForm):
 class ParentingForm(forms.ModelForm):
     class Meta:
         model = Parenting
-        fields = ['parent', 'student', 'family_bond', 'tutor']
+        fields = ['family_bond', 'tutor']
         widgets = {
-            'parent': forms.Select(attrs={'class': 'form-control'}),
-            'student': forms.Select(attrs={'class': 'form-control'}),
+            # 'parent': forms.Select(attrs={'class': 'form-control'}),
+            # 'student': forms.Select(attrs={'class': 'form-control'}),
             'family_bond': forms.Select(attrs={'class': 'form-control'}),
             'tutor': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -156,10 +156,8 @@ class ParentingForm(forms.ModelForm):
 class EnrollmentForm(forms.ModelForm):
     class Meta:
         model = Enrollment
-        fields = ['student', 'school', 'last_school', 'last_study_class', 'study_class', 'date_enrollment']
+        fields = ['last_school', 'last_study_class', 'study_class', 'date_enrollment']
         widgets = {
-            'student': forms.Select(attrs={'class': 'form-control'}),
-            'school': forms.Select(attrs={'class': 'form-control'}),
             'last_school': forms.Select(attrs={'class': 'form-control'}),
             'last_study_class': forms.Select(attrs={'class': 'form-control'}),
             'study_class': forms.Select(attrs={'class': 'form-control'}),
@@ -170,23 +168,15 @@ class EnrollmentForm(forms.ModelForm):
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
-        fields = ['designation', 'type_exam', 'date_exam',
-                  'coefficient', 'subject',
-                  ]
+        fields = ['designation', 'type_exam',
+                  'date_exam', 'subject',]
         widgets = {
             'designation': forms.TextInput(attrs={'class': 'form-control'}),
             'type_exam': forms.Select(attrs={'class': 'form-control'}),
             'date_exam': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'coefficient': forms.NumberInput(attrs={'class': 'form-control'}),
             'subject': forms.Select(attrs={'class': 'form-control'}),
-            # 'students': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }
 
-
-# class ExamForm(forms.ModelForm):
-#     class Meta:
-#         model = Exam
-#         fields = ['name', 'date', 'subject', 'type_exam', 'coefficient']
 
 class StudentExamForm(forms.ModelForm):
     class Meta:

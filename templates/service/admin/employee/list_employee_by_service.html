@@ -1,0 +1,77 @@
+{% extends 'service/layout.html' %}
+
+{% block title %} School {% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="justify-content-center row" style="border: solid 1px #32a1ce;">
+        <div class="col-10">
+            <div class="card" style="margin-top:40px;">
+                <div class="d-flex justify-content-between card-header">
+                    <div class="h4">Service Employees : </div>
+                    <form method="GET">
+                        <input type="text" name="q" value="{{ query }}" placeholder="Search Staff...">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Email</th>
+                                <th>Poste</th>
+                                <th>Téléphone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.lastname }}</td>
+                                <td>{{ employee.firstname }}</td>
+                                <td>{{ employee.user.email }}</td>
+                                <td>{{ employee.position }}</td>
+                                <td>{{ employee.phone }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {% if employees.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ employees.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for num in employees.paginator.page_range %}
+                            <li class="page-item {% if employees.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if employees.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ employees.next_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

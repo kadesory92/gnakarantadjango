@@ -1,14 +1,15 @@
 <div class="sidebar">
+    <h2 class="sidebar-heading"><a class="nav-link" href="{% url 'school_dashboard' %}">Dashboard</a></h2>
     <h3 class="sidebar-heading"><a class="nav-link" href="">Menu</a></h3>
     <ul class="nav flex-column">
       <li class="nav-item">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
            aria-expanded="false"><i class="fas fa-user"></i>
-          Users
+          Staff
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="">Add Users</a></li>
-          <li><a class="dropdown-item" href="">Manage Users</a></li>
+          <li><a class="dropdown-item" href="">Add Staff</a></li>
+          <li><a class="dropdown-item" href="">Manage Staffs</a></li>
         </ul>
       </li>
       <li class="nav-item">
@@ -18,7 +19,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
           <li><a class="dropdown-item" href="{% url 'create_student' %}">Add Student</a></li>
-          <li><a class="dropdown-item" href="">Manage students</a></li>
+          <li><a class="dropdown-item" href="{% url 'manage_student' %}">Manage students</a></li>
         </ul>
       </li>
       <li class="nav-item">
@@ -27,8 +28,10 @@
           Teachers
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="">Add Teacher</a></li>
-          <li><a class="dropdown-item" href="">Manage Teachers</a></li>
+          <li><a class="dropdown-item" href="">Create Teacher</a></li>
+          <li><a class="dropdown-item" href="">Ours Teachers</a></li>
+          <li><a class="dropdown-item" href="">List Teachers</a></li>
+          <li><a class="dropdown-item" href="">Recruit Teacher</a></li>
         </ul>
       </li>
       <li class="nav-item">
@@ -41,16 +44,18 @@
           <li><a class="dropdown-item" href="">Manage Parents</a></li>
         </ul>
       </li>
+
       <li class="nav-item">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
            aria-expanded="false"><i class="fas fa-school"></i>
           Classes
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="">Add Class</a></li>
-          <li><a class="dropdown-item" href="">Manage Classes</a></li>
+          <li><a class="dropdown-item" href="{% url 'ours_classes' %}">Ours Classes</a></li>
+          <li><a class="dropdown-item" href="">Classes List</a></li>
         </ul>
       </li>
+
       <li class="nav-item">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
            aria-expanded="false"><i class="fas fa-book"></i>
@@ -58,16 +63,28 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
           <li><a class="dropdown-item" href="">Add Subject</a></li>
-          <li><a class="dropdown-item" href="">Manage Subjects</a></li>
+          <li><a class="dropdown-item" href="{% url 'list_subject' %}">List Subjects</a></li>
         </ul>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+           aria-expanded="false"><i class="fas fa-chalkboard"></i>
+          Classroom
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          <li><a class="dropdown-item" href="{% url 'create_classroom' %}">Add Classroom</a></li>
+          <li><a class="dropdown-item" href="{% url 'manage_classroom' %}">Manage Classroom</a></li>
+        </ul>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
            aria-expanded="false"><i class="fas fa-book-open"></i>
           Courses
         </a>
         <ul class="dropdown-menu dropdown-menu-dark">
-          <li><a class="dropdown-item" href="">Add Course</a></li>
+          <li><a class="dropdown-item" href="{% url 'create_course' %}">Add Course</a></li>
           <li><a class="dropdown-item" href="">Manage Courses</a></li>
         </ul>
       </li>

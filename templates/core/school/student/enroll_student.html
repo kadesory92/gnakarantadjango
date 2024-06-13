@@ -1,0 +1,30 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+<div class="content">
+
+    <div class="justify-content-center row mt-4" id="listSubject">
+
+        <div class="col-md-10">
+
+            <div class="card" style="margin-top:0px;">
+                <div class="card-header"><h4>Add Course</h4></div>
+                <div class="card-body">
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ enrollment_form.as_p }}
+
+                        <button type="submit">Save</button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

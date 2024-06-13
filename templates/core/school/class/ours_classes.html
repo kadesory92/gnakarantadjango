@@ -1,0 +1,84 @@
+{% extends 'core/school/master.html' %}
+
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+
+        <div class="justify-content-center row mt-4" id="listClassrooms">
+
+            <div class="col-md-10">
+
+                <div class="card mb-4">
+
+                    <div class="d-flex justify-content-between card-header">
+                        <h4 class="mt-3 mb-2 my-3">Manage Study Classes</h4>
+                        <form method="GET" action="{% url 'manage_classroom' %}" class="mt-3">
+                            <input type="text" name="{{search}}" value="{{search_query}}">
+                            <button type="submit">Search</button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>Designation</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for class in classes %}
+                                    <tr>
+                                        <td>{{ class.name }}</td>
+                                        <td>{{ class.designation }}</td>
+                                        <td>
+                                            <a href="{% url 'detail_classroom' classroom.id %}">Détails</a>
+                                            <a href="{% url 'edit_classroom' classroom.id %}">Éditer</a>
+                                            <a href="{% url 'delete_classroom' classroom.id %}">Supprimer</a>
+                                        </td>
+                                    </tr>
+                                  {% empty %}
+                                    <tr>
+                                      <td colspan="4">Aucune salle de classe trouvée.</td>
+                                    </tr>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between card-footer">
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if classrooms_page.has_previous %}
+                                    <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; Première</a>
+                                    <a href="?page={{ classes_page.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Précédente</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    Page {{ classrooms_page.number }} sur {{ classrooms_page.paginator.num_pages }}.
+                                </span>
+
+                                {% if classrooms_page.has_next %}
+                                    <a href="?page={{ classes_page.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Suivante</a>
+                                    <a href="?page={{ classes_page.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Dernière &raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <a href="{% url 'create_classroom' %}" class="btn btn-info btn-sm">Ajouter une salle de classe</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

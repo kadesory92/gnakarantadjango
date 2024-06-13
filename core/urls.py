@@ -13,10 +13,12 @@ urlpatterns = [
     path('school/student/edit_student/<int:id>/', views_student.edit_student, name='edit_student'),
     path('school/student/delete_student/<int:id>/', views_student.delete_student, name='delete_student'),
     path('school/parent/create_parent/<int:student_id>/', views_student.create_parent, name='create_parent'),
-    path('school/student/parent/create_parenting/<int:student_id>/<int:parent_id>/', views_student.create_parenting, name='create_parenting'),
+    path('school/student/parent/create_parenting/<int:student_id>/<int:parent_id>/', views_student.create_parenting,
+         name='create_parenting'),
     path('school/student/enrollment/<int:student_id>/', views_student.enroll_student, name='enrollment_student'),
 
-    path('service/teacher/manage_teacher_by_direction/', views_teacher.manage_teacher_by_direction, name='teacher_by_direction'),
+    path('service/teacher/manage_teacher_by_direction/', views_teacher.manage_teacher_by_direction,
+         name='teacher_by_direction'),
     path('school/teacher/manage_teacher_by_school', views_teacher.manage_teacher_by_school, name='manage_teacher'),
     path('service/teacher/create_teacher', views_teacher.register_teacher, name='create_teacher'),
     path('service/teacher/assign_subjects/<int:teacher_id>', views_teacher.assign_subjects, name='assign_subjects'),
@@ -25,9 +27,10 @@ urlpatterns = [
     path('school/teacher/delete_teacher/<int:id>', views_teacher.delete_teacher, name='delete_teacher'),
 
     path('service/admin/create_subject', views.create_subject, name='create_subject'),
-    path('service/admin/list_subjects', views.list_subject, name='list_subject'),
+    path('school/subject/list_subjects', views.list_subject, name='list_subject'),
 
-    path('study_classes/', views.manage_studyClass, name='manage_class'),
+    path('service/classes/manage_class', views.manage_studyClass, name='manage_class'),
+    path('school/classes/manage_classes', views.ours_classes, name='ours_classes'),
     path('study_classes/create/', views.create_studyClass, name='create_class'),
     path('study_classes/<int:class_id>/', views.detail_studyClass, name='detail_class'),
     path('study_classes/<int:class_id>/edit/', views.edit_studyClass, name='edit_class'),
@@ -39,4 +42,12 @@ urlpatterns = [
     path('school/classrooms/edit_classroom/<int:classroom_id>/edit/', views.edit_classroom, name='edit_classroom'),
     path('school/classrooms/delete_classroom/<int:classroom_id>/delete/', views.delete_classroom,
          name='delete_classroom'),
+
+    path('school/courses/manage_course/', views.manage_course, name='manage_course'),
+    path('school/courses/create/create/', views.create_course, name='create_course'),
+    path('school/courses/<int:course_id>/detail/', views.detail_course, name='detail_course'),
+    path('school/courses/<int:course_id>/edit/', views.edit_course, name='edit_course'),
+    path('school/courses/<int:course_id>/delete/', views.delete_course, name='delete_course'),
+    path('school/courses/class/<int:study_class_id>/list_course', views.list_course_by_class,
+         name='list_course_by_class'),
 ]
