@@ -1,0 +1,65 @@
+LEVEL:
+0->'primary', 'Primaire',
+1->'college_cycle', 'Collège',
+2->'high_school_cycle', 'Lycée',
+3->'primary_college', 'Ecole Primaire et Collège',
+4->'college_high_school', 'Collège et lycée',
+5->'general_level', 'Tous les niveaux'
+
+
+CATEGORY:
+0->'primary_education', 'Enseignement primaire',
+1->'secondary_education', 'Enseignement Seconaire'
+
+
+TYPE_SCHOOL:
+0->'public', 'Ecole Publique',
+1->'private', 'Ecole Privée'
+
+
+GENDER:
+0->'female', 'Féminin',
+1->'male', 'Masculin',
+
+
+STATUS_TEACHER:
+0->'stat_official', 'Fonctionnaire',
+1->'private', 'Privé'
+
+
+ATTENDANCE_STATUS:
+0->'present', 'Présent',
+1->'absent', 'Absent'
+
+
+FORMATION :
+0->'college', 'Collège',
+1->'high_school', 'Lycée'
+0->'college', 'Collège',
+1->'high_school', 'Lycée'
+0->'college', 'Collège',
+1->'high_school', 'Lycée'
+
+
+LEVEL_OF_STUDY:
+0->0, 'CEPE',
+1->1, 'BEPC',
+1->1, 'BAPEEL',
+1->1, 'BACCALAUREAT',
+1->1, 'LICENCE',
+1->1, 'MASTER',
+1->1, 'DOCTORAT',
+
+
+ATTENDANCE_STATUS:
+0->'present', 'Présent',
+1->'absent', 'Absent'
+
+
+LEVEL:
+0->0, 'Primaire',
+0->1, 'Collège',
+0->2, 'Lycée',
+0->3, 'Ecole Primaire et Collège',
+0->4, 'Collège et lycée',
+0->5, 'Tous les niveaux'

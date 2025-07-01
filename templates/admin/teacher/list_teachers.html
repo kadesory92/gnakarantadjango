@@ -5,7 +5,7 @@
 <div class="card mb-4">
 
     <div class="d-flex justify-content-between card-header my-2">
-        <div class="title h5" style="margin-top: 10px;">Manage Services</div>
+        <div class="title h5" style="margin-top: 10px;">Manage Teachers</div>
         <div class="d-flex search_and_add">
             <div class="search">
                 <form class="form-inline float-right" method="get">
@@ -14,7 +14,7 @@
                 </form>
             </div>
 
-            <a href="{% url 'create_service' %}" class="btn btn-info btn-sm ml-1 text-center my-1">Add New Service</a>
+            <a href="{% url 'create_teacher' %}" class="btn btn-info btn-sm ml-1 text-center my-1">Add New Teacher</a>
         </div>
 
     </div>
@@ -24,28 +24,27 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Region</th>
-                        <th>Commune</th>
-                        <th>Prefecture</th>
+                        <th>Lastname</th>
+                        <th>Firstname</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for service in services %}
+                    {% for teacher in teachers %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ service.name }}</td>
-                            <td>{{ service.type_service|upper }}</td>
-                            <td>{{ service.region|capfirst }}</td>
-                            <td>{{ service.commune }}</td>
-                            <td>{{ service.prefecture }}</td>
+                            <td>{{ teacher.lastname }}</td>
+                            <td>{{ teacher.firstname }}</td>
+                            <td>{{ teacher.phone }}</td>
+                            <td>{{ teacher.user.email }}</td>
+                            <td>{{ teacher.status }}</td>
                             <td>
-                                <a href="{% url 'delete_service' service.id %}" class="btn btn-danger btn-sm">Delete</a>
-                                <a href="{% url 'edit_service' service.id %}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{% url 'detail_service' service.id %}" class="btn btn-info btn-sm">Show</a>
-                                <a href="{% url 'service_detail' service.id %}" class="btn btn-info btn-sm">Service</a>
+                                <a href="{% url 'delete_teacher' teacher.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{% url 'edit_teacher' teacher.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'detail_teacher' teacher.id %}" class="btn btn-info btn-sm">Show</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -58,22 +57,22 @@
         <!-- Pagination -->
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            {% if services.has_previous %}
+            {% if teachers.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ services.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
+                    <a class="page-link" href="?page={{ teachers.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
             {% endif %}
-            {% for num in services.paginator.page_range %}
-                <li class="page-item {% if services.number == num %}active{% endif %}">
+            {% for num in teachers.paginator.page_range %}
+                <li class="page-item {% if teachers.number == num %}active{% endif %}">
                     <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
                 </li>
             {% endfor %}
-            {% if services.has_next %}
+            {% if teachers.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ services.next_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
+                    <a class="page-link" href="?page={{ teachers.next_page_number }}{% if query %}&q={{ query }}{% endif %}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
                     </a>

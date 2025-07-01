@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
@@ -5,14 +6,17 @@ from django.db.models import Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
 
 from core.forms import SubjectForm, StudyClassForm, \
-    TeachingForm, ClassroomForm, CourseForm
-from core.models import Subject, StudyClass, Classroom, Course, Student, SchoolTeacher, Attendance
+    TeachingForm, ClassroomForm, CourseForm, ProgramForm
+from core.models import Subject, StudyClass, Classroom, Course, Student, SchoolTeacher, Attendance, Program
 from school.models import School, Staff
 from service.models import Employee
 
 
 def home(request):
     return render(request, 'home.html')
+
+def error(request):
+    return render(request, 'error.html')
 
 
 @login_required(login_url='login')
@@ -154,7 +158,7 @@ def create_teaching(request):
 
 
 def manage_studyClass(request):
-    return render(request, '')
+    return render(request, 'error.html')
 
 
 @login_required(login_url='login')
@@ -163,7 +167,7 @@ def ours_classes(request):
 
     # Vérifiez si l'utilisateur a le rôle requis pour gérer les classes
     if user.role not in ['SCHOOL_ADMIN', 'SCHOOL_MANAGER', 'SCHOOL']:
-        raise PermissionDenied
+        redirect('error')
 
     # Récupérer l'école liée à l'utilisateur connecté
     if user.role == 'SCHOOL':
@@ -488,3 +492,50 @@ def delete_course(request, course_id):
         course.delete()
         return redirect('manage_course')
     return render(request, 'core/school/course/delete_course.html', {'course': course})
+
+
+def list_programs(request):
+    programs = Program.objects.all()
+    paginator = Paginator(programs, 10)  # 10 programmes par page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'core/program/list_programs.html', {'page_obj': page_obj})
+
+
+def create_program(request):
+    if request.method == "POST":
+        program_form = ProgramForm(request.POST)
+        if program_form.is_valid():
+            program_form.save()
+            return redirect('list_programs')
+    else:
+        program_form = ProgramForm()
+    return render(request, 'core/program/form_program.html', {'program_form': program_form, 'action': 'Create'})
+
+
+def detail_program(request, program_id):
+    program = get_object_or_404(Program, pk=program_id)
+    subjects = program.subjects.all()
+    return render(request, 'core/program/detail_program.html', {'program': program, 'subjects': subjects})
+
+
+def edit_program(request, program_id):
+    program = get_object_or_404(Program, id=program_id)
+    if request.method == "POST":
+        program_form = ProgramForm(request.POST, instance=program)
+        if program_form.is_valid():
+            program_form.save()
+            return redirect('detail_program', id=program_id)
+    else:
+        program_form = ProgramForm(instance=program)
+    return render(request, 'core/program/form_program.html', {'program_form': program_form, 'action': 'Edit'})
+
+
+def delete_program(request, program_id):
+    program = get_object_or_404(Program, id=program_id)
+    if request.method == 'POST':
+        program.delete()
+        messages.success(request, 'Program deleted successfully!')
+        return redirect('list_programs')
+    return render(request, 'core/program/program_delete_confirm.html', {'program': program})
+

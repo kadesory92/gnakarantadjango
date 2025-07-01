@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import inlineformset_factory, modelformset_factory
+
 from .models import Student, Enrollment, Teacher, SchoolTeacher, Subject, Teaching, StudyClass, Classroom, Course, \
     Parent, Parenting, Exam, Attendance, Program, StudentExam
 
@@ -7,8 +9,7 @@ class TeacherForm(forms.ModelForm):
     class Meta:
         exclude = ['user']
         model = Teacher
-        fields = ['user', 'direction', 'lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'status',
-                  'form_level', 'certificate', 'address', 'photo']
+        fields = ['user', 'direction', 'lastname', 'firstname', 'date_of_birth', 'gender', 'phone', 'status', 'diploma', 'address', 'photo']
         widgets = {
             'direction': forms.Select(attrs={'class': 'form-control'}),
             'lastname': forms.TextInput(attrs={'class': 'form-control'}),
@@ -17,8 +18,8 @@ class TeacherForm(forms.ModelForm):
             'gender': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
-            'form_level': forms.TextInput(attrs={'class': 'form-control'}),
-            'certificate': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            # 'study_level': forms.TextInput(attrs={'class': 'form-control'}),
+            'diploma': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control'}),
             'photo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
@@ -168,11 +169,11 @@ class EnrollmentForm(forms.ModelForm):
 class ExamForm(forms.ModelForm):
     class Meta:
         model = Exam
-        fields = ['designation', 'type_exam',
-                  'date_exam', 'subject',]
+        fields = ['designation', 'period', 'month', 'date_exam', 'subject']
         widgets = {
             'designation': forms.TextInput(attrs={'class': 'form-control'}),
-            'type_exam': forms.Select(attrs={'class': 'form-control'}),
+            'period': forms.Select(attrs={'class': 'form-control'}),
+            'month': forms.Select(attrs={'class': 'form-control'}),
             'date_exam': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'subject': forms.Select(attrs={'class': 'form-control'}),
         }
@@ -211,10 +212,16 @@ class AttendanceForm(forms.ModelForm):
 class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program
-        fields = ['year', 'description', 'courses', 'school']
+        fields = ['level', 'year', 'description', 'subjects', 'startDate', 'endDate']
         widgets = {
+            'level': forms.Select(attrs={'class': 'form-control'}),
             'year': forms.NumberInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'courses': forms.Select(attrs={'class': 'form-control'}),
-            'school': forms.Select(attrs={'class': 'form-control'}),
+            'subjects': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'startDate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'endDate': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
         }
+
+
+# CourseFormSet = inlineformset_factory(Program, Course, form=CourseForm, extra=1)
+SubjectFormSet = modelformset_factory(Subject, form=SubjectForm, extra=1, can_delete=True)

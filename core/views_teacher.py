@@ -1,7 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -14,6 +14,28 @@ from service.models import Employee, Service
 
 
 # GESION DES PROFESSEUR
+
+
+def all_teacher_list(request):
+    teachers = Teacher.objects.all()
+
+    # Filtering
+    query = request.GET.get('q')
+    if query:
+        teachers = teachers.filter(name__icontains=query)
+
+    # Pagination
+    paginator = Paginator(teachers, 10)  # Show 10 services per page
+    page = request.GET.get('page')
+    try:
+        teachers = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page is not an integer, display the first page
+        teachers = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of bounds (for example, 9999), display the last results page
+        teachers = paginator.page(paginator.num_pages)
+    return render(request, 'admin/teacher/list_teachers.html', {'teachers': teachers, 'query': query})
 
 
 @login_required(login_url='login')
@@ -161,6 +183,7 @@ def register_teacher(request):
         'user_form': user_form,
         'teacher_form': teacher_form
     })
+
 
 @role_required(['ADMIN', 'ADMIN_DPE', 'ADMIN_DCE'])
 def assign_subjects(request, teacher_id):

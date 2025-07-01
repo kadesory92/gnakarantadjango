@@ -2,9 +2,10 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.shortcuts import render, redirect
 
+from core.models import Student, Teacher
 from school.models import School
 from service.models import Service
 from .forms import EmployeeForm, UserForm, FounderForm, LoginForm
@@ -38,6 +39,17 @@ def logOut(request):
 @login_required(login_url='login')
 def admin_dashboard(request):
     schools = School.objects.all()
+    students = Student.objects.all()
+    teachers = Teacher.objects.all()
+
+    total_schools = schools.count()
+    total_students = students.count()
+    total_teachers = teachers.count()
+
+    schools = schools.annotate(
+        student_count=Count('student'),
+        teacher_count=Count('schoolteacher')
+    )
 
     # Filtering
     query = request.GET.get('q')
@@ -74,7 +86,10 @@ def admin_dashboard(request):
         'query': query,
         'direction_query': direction_query,
         'ire_query': ire_query,
-        'type_query': type_query
+        'type_query': type_query,
+        'total_schools': total_schools,
+        'total_students': total_students,
+        'total_teachers': total_teachers
     }
     return render(request, 'admin/admin_dashboard.html', context)
 

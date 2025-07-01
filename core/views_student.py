@@ -2,7 +2,7 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
@@ -13,6 +13,50 @@ from core.forms import StudentForm, EnrollmentForm, ParentForm, ParentingForm
 from core.models import Student, Enrollment, Parent
 from school.models import School, Staff
 from service.models import Employee
+
+
+def all_students(request):
+    students = Student.objects.all()
+
+    # Filtering
+    query = request.GET.get('q')
+    if query:
+        students = students.filter(name__icontains=query)
+
+    # Pagination
+    paginator = Paginator(students, 10)  # Show 10 services per page
+    page = request.GET.get('page')
+    try:
+        students = paginator.page(page)
+    except PageNotAnInteger:
+        # If the page is not an integer, display the first page
+        students = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of bounds (for example, 9999), display the last results page
+        students = paginator.page(paginator.num_pages)
+    return render(request, 'admin/student/list_all_students.html', {'students': students})
+
+
+@login_required()
+def list_student_by_service(request):
+    user = request.user
+    if user.role not in ['ADMIN', 'ADMIN_IRE', 'ADMIN_DPE', 'ADMIN_DCE', 'STAFF_IRE', 'STAFF_DPE', 'STAFF_DCE']:
+        redirect('error')
+
+    employee = get_object_or_404(Employee, user=user)
+    service = employee.service
+    if user.role in ['ADMIN', 'ADMIN_IRE', 'STAFF_IRE']:
+        schools = School.objects.filter(ire=service)
+        for school in schools:
+            list_student_by_ire = Student.objects.filter(school=school)
+            return render(request, 'service/admin/student/list_student_by_ire.html',
+                          {'list_student_by_ire': list_student_by_ire})
+    else:
+        schools = School.objects.filter(direction=service)
+        for school in schools:
+            list_student_by_direction = Student.objects.filter(school=school)
+            return render(request, 'service/admin/student/list_student_by_ire.html',
+                          {'list_student_by_ire': list_student_by_direction})
 
 
 @login_required(login_url='login')
@@ -110,7 +154,7 @@ def create_student(request):
 
         return render(request, 'core/school/student/create_student.html', context)
 
-    except Employee.DoesNotExist:
+    except:
         raise PermissionDenied
 
 
@@ -281,15 +325,6 @@ def create_parenting(request, student_id, parent_id):
 
 @login_required(login_url='login')
 def enroll_student(request, student_id):
-    # user = request.user
-
-    # if user.role == 'SCHOOL':
-    #     school = get_object_or_404(School, user=user)
-    #
-    # if user.role in ['SCHOOL_ADMIN', 'SCHOOL_MANAGER']:
-    #     staff = get_object_or_404(Staff, user=user)
-    #     school = staff.school
-
     student = get_object_or_404(Student, id=student_id)
     if request.method == 'POST':
         enrollment_form = EnrollmentForm(request.POST)

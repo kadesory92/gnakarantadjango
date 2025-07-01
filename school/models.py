@@ -7,17 +7,16 @@ from service.models import Service
 class Founder(models.Model):
     objects = None
     GENDER = [
-        ('female', 'Féminin'),
-        ('male', 'Masculin'),
+        (0, 'Féminin'),
+        (1, 'Masculin'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=200)
     firstname = models.CharField(max_length=200)
     date_of_birth = models.DateField()
-    gender = models.CharField(max_length=100, choices=GENDER)
+    gender = models.IntegerField(choices=GENDER)
     phone = models.CharField(max_length=200)
     bio = models.CharField(max_length=200)
-    status = models.CharField(max_length=200)
     address = models.TextField()
     photo = models.ImageField(upload_to='founders/photos', blank=True, null=True)
     document = models.FileField(upload_to='founders/documents', blank=True, null=True)
@@ -28,19 +27,9 @@ class Founder(models.Model):
 
 class School(models.Model):
     objects = None
-    # IRE = [
-    #     ('ire_boke', 'IRE BOKE'),
-    #     ('ire_conakry', 'Conakry'),
-    #     ('ire_faranah', 'IRE FARANAH'),
-    #     ('ire_kankan', 'IRE KANKAN'),
-    #     ('ire_kindia', 'IRE KINDIA'),
-    #     ('ire_labe', 'IRE LABE'),
-    #     ('ire_mamou', 'IRE MAMOU'),
-    #     ('ire_nzerekore', 'IRE N\'ZEREKORE')
-    # ]
     CATEGORY = [
-        ('primary_education', 'Enseignement primaire'),
-        ('secondary_education', 'Enseignement Seconaire')
+        (0, 'Enseignement primaire'),
+        (1, 'Enseignement Seconaire')
     ]
     TYPE_SCHOOL = [
         ('public', 'Ecole Publique'),
@@ -48,12 +37,12 @@ class School(models.Model):
 
     ]
     LEVEL = [
-        ('primary', 'Primaire'),
-        ('college_cycle', 'Collège'),
-        ('high_school_cycle', 'Lycée'),
-        ('primary_college', 'Ecole Primaire et Collège'),
-        ('college_high_school', 'Collège et lycée'),
-        ('general_level', 'Tous les niveaux')
+        (0, 'Primaire'),
+        (1, 'Collège'),
+        (2, 'Lycée'),
+        (3, 'Ecole Primaire et Collège'),
+        (4, 'Collège et lycée'),
+        (5, 'Tous les niveaux')
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     founder = models.ForeignKey(Founder, on_delete=models.SET_NULL, null=True, blank=True)
@@ -61,10 +50,10 @@ class School(models.Model):
     ire = models.ForeignKey(Service, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=200, choices=TYPE_SCHOOL)
-    category = models.CharField(max_length=200, choices=CATEGORY)
-    level = models.CharField(max_length=200, choices=LEVEL)
+    category = models.IntegerField(choices=CATEGORY)
+    level = models.IntegerField(choices=LEVEL)
     phone = models.CharField(max_length=200)
-    address_email = models.EmailField(max_length=200, blank=True, null=True)
+    address = models.TextField(max_length=200, blank=True, null=True)
     site_web = models.URLField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to='schools/images', blank=True, null=True)
 
@@ -87,8 +76,8 @@ class Staff(models.Model):
     DoesNotExist = None
     objects = None
     GENDER = [
-        ('female', 'Féminin'),
-        ('male', 'Masculin'),
+        (0, 'Féminin'),
+        (1, 'Masculin'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=200)

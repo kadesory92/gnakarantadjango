@@ -4,11 +4,13 @@ from core import views, views_student, views_teacher
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('/error', views.error, name='error'),
 
     path('school/admin/dashboard', views.school_dashboard, name='school_dashboard'),
 
     path('school/student/manage_student', views_student.manage_student, name='manage_student'),
-    path('school/student/create_student', views_student.create_student, name='create_student'),
+    path('admin/school/student/all_students', views_student.all_students, name='all_student'),
+    path('core/school/student/create_student', views_student.create_student, name='create_student'),
     path('school/student/detail_student/<int:id>/', views_student.detail_student, name='detail_student'),
     path('school/student/edit_student/<int:id>/', views_student.edit_student, name='edit_student'),
     path('school/student/delete_student/<int:id>/', views_student.delete_student, name='delete_student'),
@@ -20,6 +22,7 @@ urlpatterns = [
     path('service/teacher/manage_teacher_by_direction/', views_teacher.manage_teacher_by_direction,
          name='teacher_by_direction'),
     path('school/teacher/manage_teacher_by_school', views_teacher.manage_teacher_by_school, name='manage_teacher'),
+    path('admin/school/teacher/all_teachers', views_teacher.all_teacher_list, name='all_teachers'),
     path('service/teacher/create_teacher', views_teacher.register_teacher, name='create_teacher'),
     path('service/teacher/assign_subjects/<int:teacher_id>', views_teacher.assign_subjects, name='assign_subjects'),
     path('school/teacher/detail_teacher/<int:id>', views_teacher.detail_teacher, name='detail_teacher'),
@@ -50,4 +53,10 @@ urlpatterns = [
     path('school/courses/<int:course_id>/delete/', views.delete_course, name='delete_course'),
     path('school/courses/class/<int:study_class_id>/list_course', views.list_course_by_class,
          name='list_course_by_class'),
+
+    path('admin/school/program/list_programs', views.list_programs, name='list_programs'),
+    path('admin/school/program/create_program', views.create_program, name='create_program'),
+    path('admin/school/program/<int:program_id>/detail', views.detail_program, name='detail_program'),
+    path('admin/school/program/<int:program_id>/edit', views.edit_program, name='edit_program'),
+    path('admin/school/program/<int:program_id>/delete', views.delete_program, name='delete_program')
 ]

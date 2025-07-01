@@ -21,26 +21,38 @@
     <a href="#schoolsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Schools</a>
     <div class="collapse list-group-submenu" id="schoolsSubmenu">
       <a href="{% url 'create_school' %}" class="list-group-item list-group-item-action bg-light pl-4">Add School</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager School</a>
+<!--      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager School</a>-->
       <a href="{% url 'list_schools' %}" class="list-group-item list-group-item-action bg-light pl-4">List School</a>
     </div>
 
     <a href="#teachersSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Teachers</a>
     <div class="collapse list-group-submenu" id="teachersSubmenu">
       <a href="{% url 'create_teacher' %}" class="list-group-item list-group-item-action bg-light pl-4">Add Teacher</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manager Teacher</a>
+      <a href="{% url 'all_teachers' %}" class="list-group-item list-group-item-action bg-light pl-4">Manager Teacher</a>
     </div>
 
     <a href="#studentsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Students</a>
     <div class="collapse list-group-submenu" id="studentsSubmenu">
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manage Student</a>
+      <a href="{% url 'all_student' %}" class="list-group-item list-group-item-action bg-light pl-4">Manage Student</a>
       <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Student</a>
     </div>
 
+    <a href="#subjectsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Subjects</a>
+    <div class="collapse list-group-submenu" id="subjectsSubmenu">
+      <a href="{% url 'list_subject' %}" class="list-group-item list-group-item-action bg-light pl-4">Manage Subject</a>
+      <a href="{% url 'create_subject' %}" class="list-group-item list-group-item-action bg-light pl-4">Subject</a>
+    </div>
+
+    <!--<a href="#coursesSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Subjects</a>
+    <div class="collapse list-group-submenu" id="coursesSubmenu">
+      <a href="{% url 'list_subject' %}" class="list-group-item list-group-item-action bg-light pl-4">Courses</a>
+      <a href="{% url 'create_subject' %}" class="list-group-item list-group-item-action bg-light pl-4">Course</a>
+    </div>-->
+
     <a href="#programSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">National Program</a>
     <div class="collapse list-group-submenu" id="programSubmenu">
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Program</a>
-      <a href="#" class="list-group-item list-group-item-action bg-light pl-4">Manage Program</a>
+      <a href="{% url 'create_program' %}" class="list-group-item list-group-item-action bg-light pl-4">Create Program</a>
+      <a href="{% url 'list_programs' %}" class="list-group-item list-group-item-action bg-light pl-4">Manage Program</a>
     </div>
 
     <a href="#rapportsSubmenu" class="list-group-item list-group-item-action bg-light" data-toggle="collapse" aria-expanded="false">Rapports</a>

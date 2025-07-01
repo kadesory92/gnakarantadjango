@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+<div class="container" style="margin-top:100px; margin-bottom:80px;">
+  <div class="row justify-content-center">
+
+    <div class="col-8">
+
+      <div class="card mt-5">
+
+        <div class="card-header">
+          <h4 class="my-4 text-center">{{ program.year }} - {{ program.description }}</h4>
+        </div>
+
+        <div class="card-body">
+
+          <div class="row mb-3">
+              <div class="col-md-12 d-flex justify-content-center">
+                  <p><strong>Date de Debut :</strong> {{ program.startDate }}</p>
+                  <p class="ml-5"><strong>Date de Fin :</strong> {{ program.endDate }}</p>
+                  <p class="ml-5"><strong>Niveau :</strong> {{ program.level|capfirst }}</p>
+              </div>
+          </div>
+          <h4>Matières</h4>
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for subject in subjects %}
+                      <tr>
+                          <td>{{ subject.name }}</td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'list_programs' %}" class="btn btn-secondary">Back to list</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+

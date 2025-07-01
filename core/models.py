@@ -8,25 +8,35 @@ from service.models import Service
 class Teacher(models.Model):
     objects = None
     GENDER = [
-        ('female', 'Féminin'),
-        ('male', 'Masculin'),
+        (0, 'Féminin'),
+        (1, 'Masculin'),
     ]
 
-    STATUS = [
-        ('stat_official', 'Fonctionnaire'),
-        ('private', 'Privé')
+    STATUS_TEACHER = [
+        (0, 'Fonctionnaire'),
+        (1, 'Privé')
     ]
+
+    # LEVEL_OF_STUDY = [
+    #     (0, 'CEPE'),
+    #     (1, 'BEPC'),
+    #     (2, 'BAPEEL'),
+    #     (3, 'BACCALAUREAT'),
+    #     (4, 'LICENCE'),
+    #     (5, 'MASTER'),
+    #     (6, 'DOCTORAT')
+    # ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     direction = models.ForeignKey(Service, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
     date_of_birth = models.DateField()
-    gender = models.CharField(max_length=10, choices=GENDER)
+    gender = models.IntegerField(choices=GENDER)
     phone = models.CharField(max_length=20)
-    status = models.CharField(max_length=200, choices=STATUS)
-    form_level = models.CharField(max_length=100)
-    certificate = models.FileField(upload_to='teachers/documents', blank=True, null=True)
+    status = models.IntegerField(choices=STATUS_TEACHER)
+    # study_level = models.CharField(max_length=100, choices=LEVEL_OF_STUDY)
+    diploma = models.FileField(upload_to='teachers/documents', blank=True, null=True)
     address = models.TextField(max_length=200)
     photo = models.ImageField(upload_to='teachers/photos', blank=True, null=True)
 
@@ -64,15 +74,15 @@ class Teaching(models.Model):
 class StudyClass(models.Model):
     objects = None
     OPTION = [
-        ('general', 'Enseignement général'),
-        ('math_sciences', 'Sciences Mathématiques'),
-        ('experimental_sciences', 'Sciences Expérimentales'),
-        ('social_science', 'Science Sociale')
+        (0, 'Enseignement général'),
+        (1, 'Sciences Mathématiques'),
+        (2, 'Sciences Expérimentales'),
+        (3, 'Science Sociale')
     ]
 
     name = models.CharField(max_length=200)
     designation = models.CharField(max_length=200)
-    option = models.CharField(max_length=200, choices=OPTION)
+    option = models.IntegerField(choices=OPTION)
 
     def __str__(self):
         return self.designation
@@ -108,8 +118,8 @@ class Student(models.Model):
     DoesNotExist = None
     objects = None
     GENDER = [
-        ('female', 'Féminin'),
-        ('male', 'Masculin'),
+        (0, 'Féminin'),
+        (1, 'Masculin'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=200)
@@ -145,12 +155,17 @@ class Enrollment(models.Model):
 
 class Parent(models.Model):
     GENDER = [
-        ('female', 'Féminin'),
-        ('male', 'Masculin'),
+        (0, 'Féminin'),
+        (1, 'Masculin'),
     ]
-    FORMATION = [
-        ('college', 'Collège'),
-        ('high_school', 'Lycée')
+    LEVEL_OF_STUDY = [
+        (0, 'CEPE'),
+        (1, 'BEPC'),
+        (2, 'BAPEEL'),
+        (3, 'BACCALAUREAT'),
+        (4, 'LICENCE'),
+        (5, 'MASTER'),
+        (6, 'DOCTORAT')
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=200)
@@ -163,7 +178,7 @@ class Parent(models.Model):
     formation = models.CharField(max_length=200, null=True)
     address = models.TextField(max_length=200)
     photo = models.ImageField(upload_to='parents/photos', blank=True, null=True)
-    study_level = models.CharField(max_length=200)
+    study_level = models.CharField(max_length=200, choices=LEVEL_OF_STUDY)
 
     # students = models.ManyToManyField(Student)
 
@@ -191,15 +206,29 @@ class Parenting(models.Model):
 
 
 class Exam(models.Model):
-    TYPE_EXAM = [
+    PERIOD_EXAM = [
         ('MONTHLY', 'Mensuel'),
         ('QUARTERLY', 'Trimestriel'),
         ('SEMI_ANNUAL', 'Semestriel'),
         ('ANNUAL', 'Annuel')
     ]
-
+    MONTHS = [
+        (1, 'Janvier'),
+        (2, 'Février'),
+        (3, 'Mars'),
+        (4, 'Avril'),
+        (5, 'Mai'),
+        (6, 'Juin'),
+        (7, 'Juillet'),
+        (8, 'Aout'),
+        (9, 'Septembre'),
+        (10, 'Octobre'),
+        (11, 'Novembre'),
+        (12, 'Décembre'),
+    ]
+    month = models.CharField(max_length=2, null=True, blank=True, choices=MONTHS)
     designation = models.CharField(max_length=200)
-    type_exam = models.CharField(max_length=200, choices=TYPE_EXAM)
+    period = models.CharField(max_length=200, choices=PERIOD_EXAM)
     date_exam = models.DateField()
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
@@ -211,9 +240,43 @@ class StudentExam(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     grade = models.DecimalField(max_digits=5, decimal_places=2)
+    coefficient = models.IntegerField()
+    grade_coefficient = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f'{self.student} - {self.exam} - {self.grade}'
+        return f'{self.student.lastname} - {self.exam} - {self.grade}'
+
+
+class StudentResult(models.Model):
+    TYPE_RESULT = [
+        ('MONTHLY', 'Mensuel'),
+        ('QUARTERLY', 'Trimestriel'),
+        ('SEMI_ANNUAL', 'Semestriel'),
+        ('ANNUAL', 'Annuel')
+    ]
+
+    MONTHS = [
+        (1, 'Janvier'),
+        (2, 'Février'),
+        (3, 'Mars'),
+        (4, 'Avril'),
+        (5, 'Mai'),
+        (6, 'Juin'),
+        (7, 'Juillet'),
+        (8, 'Aout'),
+        (9, 'Septembre'),
+        (10, 'Octobre'),
+        (11, 'Novembre'),
+        (12, 'Décembre'),
+    ]
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    type_result = models.CharField(max_length=200, choices=TYPE_RESULT)
+    month = models.CharField(max_length=2, null=True, blank=True, choices=MONTHS)
+    average_monthly = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    average_quarterly = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    average_semi_annual = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    average_annual = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    year = models.DateField()
 
 
 class Attendance(models.Model):
@@ -222,16 +285,16 @@ class Attendance(models.Model):
         ('student', 'Elève'),
         ('teacher', 'Professeur'),
     ]
-    STATUS_CHOICES = [
-        ('present', 'Présent'),
-        ('absent', 'Absent'),
+    ATTENDANCE_STATUS = [
+        (0, 'Présent'),
+        (1, 'Absent'),
     ]
     JUSTIFIED_CHOICES = [
         ('yes', 'Oui'),
         ('no', 'Non'),
     ]
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=10, choices=ATTENDANCE_STATUS)
     date = models.DateField()
     justified = models.CharField(max_length=3, choices=JUSTIFIED_CHOICES)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True, blank=True)
@@ -246,10 +309,19 @@ class Attendance(models.Model):
 
 
 class Program(models.Model):
+    objects = None
+    object = None
+    LEVEL = [
+        ('primary', 'Primaire'),
+        ('college', 'Collège'),
+        ('lycee', 'Lycée')
+    ]
+    level = models.CharField(max_length=200, choices=LEVEL)
     year = models.IntegerField()
     description = models.TextField()
-    courses = models.ForeignKey(Course, on_delete=models.CASCADE)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    subjects = models.ManyToManyField(Subject)
+    startDate = models.DateField()
+    endDate = models.DateField()
 
     def __str__(self):
-        return f"{self.year} - {self.school.name}"
+        return f"{self.year} - {self.description}"

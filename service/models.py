@@ -6,19 +6,19 @@ from account.models import User
 class Service(models.Model):
     REGION = [
         ('national', 'National'),
-        ('Boké', 'Boké'),
-        ('Conakry', 'Conakry'),
-        ('Faranah', 'Faranah'),
-        ('Kankan', 'Kankan'),
-        ('Kindia', 'Kindia'),
-        ('Labé', 'Labé'),
-        ('Mamou', 'Mamou'),
-        ("N'Zérékoré", "N'Zérékoré")
+        ('boke', 'Boké'),
+        ('conakry', 'Conakry'),
+        ('faranah', 'Faranah'),
+        ('kankan', 'Kankan'),
+        ('kindia', 'Kindia'),
+        ('labé', 'Labé'),
+        ('mamou', 'Mamou'),
+        ("nzerekore", "N'Zérékoré")
     ]
 
     TYPE_SERVICE = [
         ('ministerial_cabinet', 'Cabinet Ministériel'),
-        ('national_directorat', 'Direction Nationale'),
+        ('national_directorate', 'Direction Nationale'),
         ('ire', 'Inspection Régionale'),
         ('dpe', 'Direction Préfectorale de l\'Education'),
         ('dce', 'Direction Communale de l\'Education'),
@@ -43,11 +43,11 @@ class Employee(models.Model):
     lastname = models.CharField(max_length=100)
     firstname = models.CharField(max_length=100)
     date_of_birth = models.DateField()
-    GENDER = (
-        ('male', 'Male'),
-        ('female', 'Female')
-    )
-    gender = models.CharField(max_length=10, choices=GENDER)
+    GENDER = [
+        (0, 'Male'),
+        (1, 'Female')
+    ]
+    gender = models.IntegerField(choices=GENDER)
     phone = models.CharField(max_length=20)
     position = models.CharField(max_length=100)
     STATUS_CHOICES = (

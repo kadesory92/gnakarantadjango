@@ -8,7 +8,7 @@ class SchoolForm(forms.ModelForm):
         exclude = ['user']
         fields = [
             'founder', 'direction', 'ire', 'name', 'category',
-            'level', 'phone', 'address_email', 'site_web', 'image'
+            'level', 'phone', 'address', 'site_web', 'image'
         ]
 
         labels = {
@@ -19,7 +19,7 @@ class SchoolForm(forms.ModelForm):
             'category': 'Catégorie',
             'level': 'Niveau',
             'phone': 'Téléphone',
-            'address_email': 'Adresse Email',
+            'address': 'Adresse',
             'site_web': 'Site Web',
             'image': 'Image'
         }
@@ -34,7 +34,7 @@ class SchoolForm(forms.ModelForm):
             'category': forms.Select(attrs={'class': 'form-control'}),
             'level': forms.Select(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'address_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
             'site_web': forms.URLInput(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
